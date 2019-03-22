@@ -73,7 +73,7 @@ module.exports = env => {
             {
               loader: 'css-loader',
               options: {
-                sourceMap: true,
+                sourceMap: false,
                 modules: true,
                 localIdentName: '[name]__[local]--[hash:base64]'
               }
@@ -90,7 +90,7 @@ module.exports = env => {
                   require('postcss-inline-svg'),
                   require('precss')
                 ],
-                sourceMap: true
+                sourceMap: false
               }
             }
           ]
