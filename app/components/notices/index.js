@@ -71,7 +71,7 @@ export default createReactClass({
     if (this.state.filter)
       notices = notices.filter(notice => notice.targetList.indexOf(this.state.filter) != -1);
 
-    if (notices.length == 0)
+    if (notices.length === 0)
       return <Centered vertical horizontal>
         No notices.
       </Centered>;
@@ -92,7 +92,8 @@ export default createReactClass({
           return <Expandable
             className={STYLE.notice}
             key={i}
-            title={<div className={STYLE.title}>
+            title={notice.title}
+            titleComponent={<div className={STYLE.title}>
               <div style={{ 'fontSize': '1.2em' }}>
                 <span>{ notice.title }</span>
                 {meeting}

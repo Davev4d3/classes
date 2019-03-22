@@ -29,7 +29,7 @@ const plugins = [
 
 module.exports = env => {
   const isProduction = process.env.NODE_ENV !== 'development' && env !== 'dev';
-  const cssExtractorPlugin = isProduction ? require('mini-css-extract-plugin') : null;
+  // const cssExtractorPlugin = isProduction ? require('mini-css-extract-plugin') : null;
   const cssExtractor = isProduction ? 'style-loader' /* cssExtractorPlugin.loader */ : 'style-loader';
 
   return {

@@ -6,7 +6,7 @@ import SBHSStore from '../../stores/sbhs';
 import Centered from '../centered';
 import SBHSException from '../sbhs-exception';
 import Loader from '../loader';
-import Expandable from '../expandable';
+// import Expandable from '../expandable';
 
 import STYLE from './style.css';
 

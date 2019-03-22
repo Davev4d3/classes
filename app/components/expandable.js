@@ -22,15 +22,15 @@ export default createReactClass({
   },
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.expanded != this.state.expanded)
+    if (prevState.expanded !== this.state.expanded)
       this.fetchMaxHeight();
   },
 
   render() {
-    let {title, content, initiallyExpanded} = this.props;
+    let {titleComponent, content} = this.props;
 
     return <div {...this.props}>
-      <div onClick={() => this.setState({ expanded: !this.state.expanded })}>{title}</div>
+      <div onClick={() => this.setState({ expanded: !this.state.expanded })}>{titleComponent}</div>
       <div ref='content' style={{
         'transition': 'max-height .3s ease',
         'maxHeight': this.state.maxHeight,
