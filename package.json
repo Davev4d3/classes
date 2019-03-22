@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node server/index",
     "dev": "webpack-dev-server --mode development --env dev",
-    "build": "webpack --mode development --env export"
+    "build": "webpack --mode production --env prod"
   },
   "main": "server/index.js",
   "repository": {
