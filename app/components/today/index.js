@@ -1,4 +1,5 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 
 import SBHSStore from '../../stores/sbhs';
 import Centered from '../centered';
@@ -12,7 +13,7 @@ import STYLE from './style.css';
 
 const VARIATION_COLOR = '#00BFFF';
 
-export default React.createClass({
+export default createReactClass({
   getInitialState() {
     return {
       bells: null,

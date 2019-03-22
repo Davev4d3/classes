@@ -1,4 +1,5 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 
 import SBHSStore from '../../stores/sbhs';
 import SettingsStore from '../../stores/settings';
@@ -17,7 +18,7 @@ const LOGIN_MESSAGE = <span>
 </span>;
 
 //TODO: Snackbar if notices is outdated.
-export default React.createClass({
+export default createReactClass({
   getInitialState() {
     return {
       notices: null,

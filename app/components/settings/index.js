@@ -1,4 +1,5 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 
 import Centered from '../centered';
 import Toggle from '../toggle';
@@ -7,7 +8,7 @@ import SettingsStore from '../../stores/settings';
 
 import STYLE from './style.css';
 
-export default React.createClass({
+export default createReactClass({
   getInitialState() {
     return {
       expandNotices: SettingsStore.expandNotices,

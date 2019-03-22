@@ -1,4 +1,5 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 
 import SBHSStore from '../../stores/sbhs';
 
@@ -15,7 +16,7 @@ const LOGIN_MESSAGE = <span>
   <a onClick={() => window.location.href='/auth/login'}>Login</a> to load your timetable!
 </span>;
 
-export default React.createClass({
+export default createReactClass({
   getInitialState() {
     let weekday = WEEKDAYS[0], week = WEEKS[0];
     if (SBHSStore.today && SBHSStore.today.day) {

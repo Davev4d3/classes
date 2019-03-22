@@ -3,7 +3,9 @@ import React from 'react';
 import SBHSStore from '../stores/sbhs';
 import NetworkStore from '../stores/network';
 
-export default React.createClass({
+import createReactClass from 'create-react-class';
+
+export default createReactClass({
   getInitialState() {
     return {
       offline: !NetworkStore.online,

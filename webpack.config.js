@@ -1,68 +1,120 @@
-var webpack = require('webpack');
-var path = require('path');
-var AppCachePlugin = require('appcache-webpack-plugin');
-var fs = require('fs');
+const webpack = require('webpack');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const path = require('path');
+const AppCachePlugin = require('appcache-webpack-plugin');
+const fs = require('fs');
 
-var plugins = [
-    new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
-      },
-    }),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(false),
-    new AppCachePlugin({
-      output: 'main.appcache',
-      cache: fs.readdirSync('public/fonts')
-        .filter(f => f[0] != '.')
-        .map(f => 'fonts/' + f)
-        .concat(['main.css'])
-    })
-  ];
+const PATHS = {
+  DIST: path.resolve(__dirname, 'unset'),
+  JS: path.resolve(__dirname, 'unset'),
+  SERVER_BASE: path.join(__dirname, 'public')
+};
 
-if (process.env.NODE_ENV != 'development')
-  plugins.push(new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      warnings: false,
-      drop_console: true,
-      unsafe: true,
-      collapse_vars: true,
-      passes: 2
-    }
-  }));
+const plugins = [
+  new webpack.DefinePlugin({
+    'process.env': {
+      'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
+    },
+  }),
+  // new webpack.optimize.(),
+  // new webpack.optimize.OccurenceOrderPlugin(false),
+  new AppCachePlugin({
+    output: 'main.appcache',
+    cache: fs.readdirSync('public/fonts')
+      .filter(f => f[0] != '.')
+      .map(f => 'fonts/' + f)
+      .concat(['main.css'])
+  })
+];
 
-module.exports = {
-  context: path.join(__dirname, 'app'),
-  entry: './index',
-  output: {
-    path: path.join(__dirname, 'public'),
-    filename: 'app.js'
-  },
+module.exports = env => {
+  const isProduction = process.env.NODE_ENV !== 'development' && env !== 'dev';
+  const cssExtractorPlugin = isProduction ? require('mini-css-extract-plugin') : null;
+  const cssExtractor = isProduction ? 'style-loader' /* cssExtractorPlugin.loader */ : 'style-loader';
 
-  plugins: plugins,
+  return {
+    context: path.join(__dirname, 'app'),
+    entry: './index',
+    output: {
+      path: PATHS.SERVER_BASE,
+      filename: 'app.js'
+    },
 
-  module: {
-    loaders: [{
-      test: /\.css$/,
-      loader: 'style!css?modules&camelcase&localIdentName=[sha1:hash:base64:4]!postcss'
-    }, {
-      test: /\.js$/,
-      exclude: /node_modules/,
-      loader: 'babel?loose=all'
-    }]
-  },
+    devtool: 'source-map',
 
-  postcss: function () {
-    var autoprefixer = require('autoprefixer'),
+    optimization: {
+      minimizer: isProduction ? [
+        new UglifyJSPlugin({
+          sourceMap: true,
+          uglifyOptions: {
+            compress: {
+              inline: false
+            }
+          }
+        })
+      ] : undefined
+    },
+
+    plugins: isProduction ? plugins : plugins,
+
+    devServer: {
+      host: '0.0.0.0',
+      port: 5600,
+      contentBase: PATHS.SERVER_BASE,
+      hot: true,
+    },
+
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            cssExtractor,
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true,
+                modules: true,
+                localIdentName: '[name]__[local]--[hash:base64]'
+              }
+            },
+            {
+              loader: "postcss-loader",
+              options: {
+                autoprefixer: {
+                  browsers: ["last 2 versions"]
+                },
+                plugins: [
+                  require('autoprefixer'),
+                  require('cssnano'),
+                  require('postcss-inline-svg'),
+                  require('precss')
+                ],
+                sourceMap: true
+              }
+            }
+          ]
+        },
+        {
+          test: /\.jsx?$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader'
+        }
+      ]
+    },
+
+    /* postcss: function () {
+      var autoprefixer = require('autoprefixer'),
         precss = require('precss'),
         inlinesvg = require('postcss-inline-svg'),
         cssnano = require('cssnano');
 
-    return [
+      return [
         precss(),
         inlinesvg(),
-        autoprefixer({ browsers: ['last 1 version'] }),
+        autoprefixer({browsers: ['last 1 version']}),
         cssnano()
       ];
-  }
+    } */
+  };
 };

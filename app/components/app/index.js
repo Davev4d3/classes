@@ -13,6 +13,7 @@ import SBHSStore from '../../stores/sbhs';
 import NetworkStore from '../../stores/network';
 
 import STYLE from './style.css';
+import createReactClass from 'create-react-class';
 
 function button(icon, tooltip) {
   return <div className={STYLE.item +' '+ STYLE.button} title={tooltip}>
@@ -20,7 +21,7 @@ function button(icon, tooltip) {
     </div>;
 }
 
-export default React.createClass({
+export default createReactClass({
   getData() {
     this.setState({
       online: NetworkStore.online,

@@ -1,7 +1,8 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 import STYLE from './style.css';
 
-export default React.createClass({
+export default createReactClass({
   getInitialState() {
     return { selectedIndex: 0 };
   },
