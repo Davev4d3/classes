@@ -1,3 +1,4 @@
+:global {
 @font-face {
     font-family: 'Roboto';
     src: url('/fonts/roboto-thin.woff') format('woff');
@@ -43,4 +44,5 @@ a:hover {
 
 @media (max-width: 360px) {
   #app { font-size: 12px; }
+}
 }
