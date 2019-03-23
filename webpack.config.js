@@ -18,19 +18,23 @@ const plugins = [
   }),
   // new webpack.optimize.(),
   // new webpack.optimize.OccurenceOrderPlugin(false),
-  new AppCachePlugin({
-    output: 'main.appcache',
-    cache: fs.readdirSync('public/fonts')
-      .filter(f => f[0] != '.')
-      .map(f => 'fonts/' + f)
-      .concat(['main.css'])
-  })
 ];
 
 module.exports = env => {
   const isProduction = process.env.NODE_ENV !== 'development' && env !== 'dev';
   // const cssExtractorPlugin = isProduction ? require('mini-css-extract-plugin') : null;
   const cssExtractor = isProduction ? 'style-loader' /* cssExtractorPlugin.loader */ : 'style-loader';
+  if (isProduction) {
+    plugins.push(
+      new AppCachePlugin({
+        output: 'main.appcache',
+        cache: fs.readdirSync('public/fonts')
+          .filter(f => f[0] != '.')
+          .map(f => 'fonts/' + f)
+          // .concat(['main.css'])
+      })
+    )
+  }
 
   return {
     context: path.join(__dirname, 'app'),

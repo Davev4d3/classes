@@ -186,6 +186,7 @@ class SBHSStore extends Emitter {
         let data = JSON.parse(objectString);
 
         let periods = data['timetable']['timetable']['periods'];
+        console.log(periods);
 
         let bells = [], i = {};
         data['bells'].forEach(bell => {
@@ -193,9 +194,15 @@ class SBHSStore extends Emitter {
           i[id] = bells.length;
 
           let subjectData = null;
-          if (id in periods) {
+          if (periods.hasOwnProperty(id)) {
             subjectData = data['timetable']['subjects'][periods[id]['year'] + periods[id]['title']];
+
+            if (periods[id].fullTeacher) {
+              subjectData.fullTeacher = periods[id].fullTeacher
+            }
           }
+
+          console.log(subjectData);
 
           if (subjectData) {
             bells.push({

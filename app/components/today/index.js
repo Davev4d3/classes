@@ -83,7 +83,7 @@ export default createReactClass({
           onComplete={this.getNext} />
       </div> : <Loader />}
 
-      {periods.length? <div className={STYLE.today}>
+      {periods.length ? <div className={STYLE.today}>
         {periods.map((bell, i) => {
           if (simple) {
             return <div key={i} className={STYLE.period}>
