@@ -40,12 +40,12 @@ module.exports = env => {
       filename: 'app.js'
     },
 
-    devtool: 'source-map',
+    devtool: isProduction ? false : 'source-map',
 
     optimization: {
       minimizer: isProduction ? [
         new UglifyJSPlugin({
-          sourceMap: true,
+          sourceMap: !isProduction,
           uglifyOptions: {
             compress: {
               inline: false
@@ -95,26 +95,13 @@ module.exports = env => {
             }
           ]
         },
+
         {
           test: /\.jsx?$/,
           exclude: /node_modules/,
           loader: 'babel-loader'
         }
       ]
-    },
-
-    /* postcss: function () {
-      var autoprefixer = require('autoprefixer'),
-        precss = require('precss'),
-        inlinesvg = require('postcss-inline-svg'),
-        cssnano = require('cssnano');
-
-      return [
-        precss(),
-        inlinesvg(),
-        autoprefixer({browsers: ['last 1 version']}),
-        cssnano()
-      ];
-    } */
+    }
   };
 };
