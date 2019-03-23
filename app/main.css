@@ -1,13 +1,13 @@
 @font-face {
     font-family: 'Roboto';
-    src: url('../public/fonts/roboto-thin.woff') format('woff');
+    src: url('/fonts/roboto-thin.woff') format('woff');
     font-weight: 100;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Roboto';
-    src: url('../public/fonts/roboto-light.woff') format('woff');
+    src: url('/fonts/roboto-light.woff') format('woff');
     font-weight: 300;
     font-style: normal;
 }

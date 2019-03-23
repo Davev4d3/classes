@@ -100,7 +100,9 @@ module.exports = env => {
           test: /\.jsx?$/,
           exclude: /node_modules/,
           loader: 'babel-loader'
-        }
+        },
+
+        {test: /\.(woff|woff2|eot|ttf)$/, loader: 'null-loader'}
       ]
     }
   };
