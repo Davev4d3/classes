@@ -11,7 +11,19 @@ import parseTime from '../../utilities/parse-time';
 
 import STYLE from './style.css';
 
+import SettingsStore from '../../stores/settings';
+
 const VARIATION_COLOR = '#00BFFF';
+
+const BREAKS = ['Lunch 1', 'Recess'];
+
+function filterClasses(bells) {
+  if (SettingsStore.showBreaks) {
+    return bells.filter(bell => bell.isPeriod || BREAKS.includes(bell.title))
+  } else {
+    return bells.filter(bell => bell.isPeriod)
+  }
+}
 
 export default createReactClass({
   getInitialState() {
@@ -29,7 +41,7 @@ export default createReactClass({
     if (SBHSStore.today) {
       this.setState({
         bells: SBHSStore.today.bells,
-        periods: SBHSStore.today.bells.filter(bell => bell.isPeriod),
+        periods: filterClasses(SBHSStore.today.bells),
         date: SBHSStore.today.date
       }, this.getNext);
     }
@@ -40,12 +52,12 @@ export default createReactClass({
 
     if (bells) {
       let date = new Date(this.state.date),
-          now = Date.now();
+        now = Date.now();
 
       for (let i = 0; i < bells.length; i++) {
         let bell = bells[i];
         parseTime(date, bell.time);
-        
+
         if (date > now) {
           return this.setState({
             nextBell: bell,
@@ -72,16 +84,16 @@ export default createReactClass({
 
   render() {
     let {periods, nextBell, nextTime} = this.state,
-        simple = !periods.some(e => e.room);
+      simple = !periods.some(e => e.room);
 
     return <Centered vertical horizontal>
-      {nextBell? <div className={STYLE.next}>
-        <span style={{ 'fontSize': '1.5em' }}>{ nextBell.title }</span> in
+      {nextBell ? <div className={STYLE.next}>
+        <span style={{'fontSize': '1.5em'}}>{nextBell.title}</span> in
         <Countdown
           to={nextTime}
           className={STYLE.countdown}
-          onComplete={this.getNext} />
-      </div> : <Loader />}
+          onComplete={this.getNext}/>
+      </div> : <Loader/>}
 
       {periods.length ? <div className={STYLE.today}>
         {periods.map((bell, i) => {
@@ -95,9 +107,9 @@ export default createReactClass({
                 {bell.title}
               </div>
               <div style={{
-                  'fontSize': '1.5em',
-                  'color': bell.variations.indexOf('time') < 0 ? null : VARIATION_COLOR
-                }}>
+                'fontSize': '1.5em',
+                'color': bell.variations.indexOf('time') < 0 ? null : VARIATION_COLOR
+              }}>
                 {bell.time}
               </div>
             </div>;
@@ -107,7 +119,7 @@ export default createReactClass({
             return <div
               key={i}
               className={STYLE.period}
-              style={{ 'color': '#757575' }}>
+              style={{'color': '#757575'}}>
               <div style={{
                 'flexGrow': '1',
                 'fontSize': '1.2em',
@@ -126,36 +138,36 @@ export default createReactClass({
           }
 
           return <div key={i} className={STYLE.period}>
-            <div style={{ 'flexGrow': '1' }}>
+            <div style={{'flexGrow': '1'}}>
               <div style={{
                 'fontSize': '1.2em',
                 'marginBottom': '0.3em',
                 'color': bell.variations.indexOf('title') < 0 ? null : VARIATION_COLOR
               }}>{bell.title}</div>
-              <div style={{ 'fontSize': '0.9em' }}>
+              <div style={{'fontSize': '0.9em'}}>
                 <span>
                   {'at '}
-                  <span style={{ 'color': bell.variations.indexOf('time') < 0 ? null : VARIATION_COLOR }}>
+                  <span style={{'color': bell.variations.indexOf('time') < 0 ? null : VARIATION_COLOR}}>
                     {bell.time || 'the time of reckoning'}
                   </span>
                 </span>
                 {' '}
-                <span style={{ 'color': '#757575' }}>
+                <span style={{'color': '#757575'}}>
                   {'with '}
-                  <span style={{ 'color': bell.variations.indexOf('teacher') < 0 ? null : VARIATION_COLOR }}>
+                  <span style={{'color': bell.variations.indexOf('teacher') < 0 ? null : VARIATION_COLOR}}>
                     {bell.teacher || 'no one'}
                   </span>
                 </span>
               </div>
             </div>
             <div style={{
-                'fontSize': '1.5em',
-                'color': bell.variations.indexOf('room') < 0 ? null : VARIATION_COLOR
-              }}>{bell.room}
+              'fontSize': '1.5em',
+              'color': bell.variations.indexOf('room') < 0 ? null : VARIATION_COLOR
+            }}>{bell.room}
             </div>
           </div>;
         })}
-      </div> :null}
+      </div> : null}
     </Centered>;
   }
 });

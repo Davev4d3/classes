@@ -12,6 +12,7 @@ export default createReactClass({
   getInitialState() {
     return {
       expandNotices: SettingsStore.expandNotices,
+      showBreaks: SettingsStore.showBreaks,
       noticesFilter: SettingsStore.noticesFilter
     };
   },
@@ -19,6 +20,7 @@ export default createReactClass({
   update() {
     this.setState({
       expandNotices: SettingsStore.expandNotices,
+      showBreaks: SettingsStore.showBreaks,
       noticesFilter: SettingsStore.noticesFilter
     });
   },
@@ -42,6 +44,7 @@ export default createReactClass({
         <div className={STYLE.labels}>
           <div>Like Us</div>
           <div>Expand Notices</div>
+          <div>Show Breaks</div>
           <div>Notices Filter</div>
           <div>Content Settings</div>
         </div>
@@ -61,6 +64,10 @@ export default createReactClass({
 
           <div>
             <Toggle enabled={this.state.expandNotices} onChange={(newState) => SettingsStore.update({ expandNotices: newState })} />
+          </div>
+
+          <div>
+            <Toggle enabled={this.state.showBreaks} onChange={(newState) => SettingsStore.update({ showBreaks: newState })} />
           </div>
 
           <div>
