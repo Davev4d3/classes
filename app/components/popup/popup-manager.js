@@ -2,6 +2,7 @@ import React from 'react';
 import { PopupsList } from './popups-list';
 import { findByKey } from '../helpers/findByKey';
 import { Popup } from './popup';
+import SBHSStore from '../../stores/sbhs';
 
 export class PopupManager extends React.Component {
   constructor(props) {
@@ -58,6 +59,8 @@ export class PopupManager extends React.Component {
   }
 
   render() {
+    if (SBHSStore.state !== SBHSStore.LOGGED_IN) return null;
+
     const {popups, oldPopups} = this.state;
     if (!popups || !popups.length) return null;
 
