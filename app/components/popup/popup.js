@@ -1,10 +1,14 @@
 import React from 'react';
 import s from './popup.css';
 
+const EXITED_TIMEOUT = 2000;
+const TRANSITION_TIMEOUT = 500;
+
 export class Popup extends React.PureComponent {
 
   static defaultProps = {
     closeTimeout: 2000,
+    destroyOnExit: true,
     show: true
   };
 
@@ -27,7 +31,7 @@ export class Popup extends React.PureComponent {
   delayedShow = (resetEasing) => {
     if (this.props.show) {
       this.setState({show: true}, resetEasing ? () => {
-        setTimeout(this.resetEasing, 500)
+        setTimeout(this.resetEasing, TRANSITION_TIMEOUT)
       } : undefined)
     }
   };
@@ -42,6 +46,7 @@ export class Popup extends React.PureComponent {
     super(props);
 
     this.state = {
+      exited: false,
       show: props.show,
       easeIn: false,
       closeVisible: !props.closeTimeout || props.closeTimeout === false ? true : false
@@ -50,11 +55,19 @@ export class Popup extends React.PureComponent {
     this.closeTimeout = null;
   }
 
+  exited = () => {
+    this.setState({exited: true})
+  };
+
   close = () => {
     this.setState({show: false});
 
     if (this.props.onClose && typeof this.props.onClose === 'function') {
       this.props.onClose()
+    }
+
+    if (this.props.destroyOnExit) {
+      this._destroyTimeout = setTimeout(this.exited, EXITED_TIMEOUT)
     }
   };
 
@@ -68,10 +81,11 @@ export class Popup extends React.PureComponent {
 
   componentWillUnmount() {
     clearTimeout(this.closeTimeout)
+    clearTimeout(this._destroyTimeout)
   }
 
   render() {
-    if (!this.props.text) return null;
+    if (!this.props.text || this.state.exited) return null;
 
     const style = this.state.show ? {} : {transform: 'translateY(-100%)'};
     if (this.state.easeIn) style.transitionTimingFunction = 'cubic-bezier(0.23, 1, 0.32, 1)';
