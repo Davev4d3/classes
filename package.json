@@ -1,23 +1,14 @@
 {
   "name": "classes",
-  "version": "0.0.1",
-  "description": "A timetable app for the bored.",
+  "version": "1.1.0",
+  "description": "A modern timetable app for Sydney High.",
   "scripts": {
     "start": "node server/index",
     "dev": "webpack-dev-server --mode development --env dev",
     "build": "webpack --mode production --env prod"
   },
   "main": "server/index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/quadrupleslap/classes.git"
-  },
   "author": "Ram Kaniyur",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/quadrupleslap/classes/issues"
-  },
-  "homepage": "https://github.com/quadrupleslap/classes",
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.4.0",

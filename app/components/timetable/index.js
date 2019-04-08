@@ -6,7 +6,9 @@ import SBHSStore from '../../stores/sbhs';
 import Centered from '../centered';
 import SBHSException from '../sbhs-exception';
 import Loader from '../loader';
-// import Expandable from '../expandable';
+
+import SettingsStore from '../../stores/settings';
+import { Assessments } from '../assessments/assessments';
 
 import STYLE from './style.css';
 
@@ -57,13 +59,19 @@ export default createReactClass({
       </Centered>;
 
     let day = this.state.weekday + ' ' + this.state.week, periods;
-    if (this.state.days)
+    let weekIndex = null;
+    if (this.state.days) {
       for (let i = this.state.days.length; i--;) {
-        if (this.state.days[i].day == day) {
+        if (this.state.days[i].day === day) {
           periods = this.state.days[i].periods;
           break;
         }
       }
+    }
+
+    if (SettingsStore.showAssessments) {
+      console.log(day)
+    }
 
     return <Centered horizontal vertical>
       <div className={STYLE.controls}>
@@ -78,7 +86,7 @@ export default createReactClass({
             </div>)}
         </div>
         <div className={STYLE.row}>
-          {['A', 'B', 'C'].map((week, i) =>
+          {WEEKS.map((week, i) =>
             <div
               key={i}
               className={STYLE.control}

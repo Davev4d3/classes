@@ -4,7 +4,6 @@ import createReactClass from 'create-react-class';
 import SBHSStore from '../../stores/sbhs';
 import Centered from '../centered';
 import Countdown from '../countdown';
-import Icon from '../icon';
 import Loader from '../loader';
 
 import parseTime from '../../utilities/parse-time';
@@ -12,6 +11,7 @@ import parseTime from '../../utilities/parse-time';
 import STYLE from './style.css';
 
 import SettingsStore from '../../stores/settings';
+import { Assessments } from '../assessments/assessments';
 
 const VARIATION_COLOR = '#00BFFF';
 
@@ -31,6 +31,7 @@ export default createReactClass({
       bells: null,
       periods: null,
       date: null,
+      dateRaw: null,
 
       nextTime: null,
       nextBell: null
@@ -42,7 +43,8 @@ export default createReactClass({
       this.setState({
         bells: SBHSStore.today.bells,
         periods: filterClasses(SBHSStore.today.bells),
-        date: SBHSStore.today.date
+        date: SBHSStore.today.date,
+        dateRaw: SBHSStore.today.dateRaw
       }, this.getNext);
     }
   },
@@ -51,8 +53,10 @@ export default createReactClass({
     let bells = this.state.bells;
 
     if (bells) {
-      let date = new Date(this.state.date),
-        now = Date.now();
+      const date = new Date(this.state.date);
+      const now = Date.now();
+
+      this.getAssessments();
 
       for (let i = 0; i < bells.length; i++) {
         let bell = bells[i];
@@ -73,13 +77,33 @@ export default createReactClass({
     });
   },
 
+  getAssessments() {
+    const bells = this.state.bells;
+    const periods = this.state.periods;
+
+    console.log('assessments');
+
+    if (SettingsStore.showAssessments && bells) {
+      if (Assessments.update(bells, this.state.date, this.state.dateRaw, periods)) {
+        console.log(bells);
+        this.setState({bells, periods})
+      }
+    }
+  },
+
+  onCalendarFetch() {
+    this.getAssessments()
+  },
+
   componentWillMount() {
     SBHSStore.bind('today', this.getData);
+    SBHSStore.bind('calendar', this.onCalendarFetch);
     this.getData();
   },
 
   componentWillUnmount() {
     SBHSStore.unbind('today', this.getData);
+    SBHSStore.unbind('calendar', this.onCalendarFetch);
   },
 
   render() {

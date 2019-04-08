@@ -1,6 +1,8 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
 import STYLE from './style.css';
+import { Popup } from '../popup/popup';
+import { PopupManager } from '../popup/popup-manager';
 
 export default createReactClass({
   getInitialState() {
@@ -26,7 +28,12 @@ export default createReactClass({
       <ul className={STYLE.nav} style={{position: 'fixed'}}>{buttons}</ul>
       <ul className={STYLE.nav}/>
 
-      <div className={STYLE.content}>{this.props.tabs[this.state.selectedIndex].content}</div>
+      <div className={STYLE.content}>
+
+        <PopupManager/>
+
+        {this.props.tabs[this.state.selectedIndex].content}
+      </div>
     </div>;
   }
 });

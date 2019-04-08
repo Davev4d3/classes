@@ -1,12 +1,11 @@
 let timers = [];
 
-//TODO: Not entirely convinced that this works.
 window.setInterval(function () {
   let now = Date.now();
 
   let i = 0;
   while (i < timers.length) {
-    if (timers[i].date <= now) {
+    if (timers[i].date < now) {
       timers[i].func(now);
       timers.splice(i, 1);
     } else {

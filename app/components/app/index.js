@@ -73,7 +73,7 @@ export default createReactClass({
           tabs.push({
             button: button('logout', 'Log Out'),
             onClick() {
-              SBHSStore.clearCache();
+              SBHSStore.constructor.clearCache();
               window.location.href = '/auth/logout';
             }
           });

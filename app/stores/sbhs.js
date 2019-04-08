@@ -19,6 +19,8 @@ class SBHSStore extends Emitter {
   constructor() {
     super();
 
+    console.log('init data store');
+
     this.LOADING = 0;
     this.LOGGED_IN = 1;
     this.LOGGED_OUT = 2;
@@ -29,6 +31,8 @@ class SBHSStore extends Emitter {
     this.timetable = localStorage['timetable'] ? JSON.parse(localStorage['timetable']) : null;
     this._defaultToday();
 
+    this.calendar = undefined;
+
     this.bind('token', () => {
       this._fetchToday();
       this._fetchNotices();
@@ -36,11 +40,14 @@ class SBHSStore extends Emitter {
     });
 
     this.bind('today', () => {
-      Timer(() => {
+      // stop infinite loop at 3:15, add one minute
+      const date = new Date(parseTime(new Date(this.today.date), this.today.bells[this.today.bells.length - 1].time).getTime() + 61000);
+
+      if (0) Timer(() => {
         this._defaultToday();
         this._fetchToday();
         this._fetchNotices();
-      }, parseTime(new Date(this.today.date), this.today.bells[this.today.bells.length - 1].time));
+      }, date);
     });
 
     setInterval(() => {
@@ -86,7 +93,7 @@ class SBHSStore extends Emitter {
     }
   }
 
-  clearCache() {
+  static clearCache() {
     delete localStorage['token'];
     delete localStorage['notices'];
     delete localStorage['timetable'];
@@ -177,9 +184,24 @@ class SBHSStore extends Emitter {
     });
   }
 
+  _fetchCalendar() {
+    if (this.token && this.calendar === undefined) {
+      this.calendar = null;
+
+      get(`https://student.sbhs.net.au/api/diarycalendar/events.json?access_token=${encodeURIComponent(this.token)}`, (err, objectString) => {
+        if (err) return;
+
+        const data = JSON.parse(objectString);
+        this.calendar = data;
+
+        this.trigger('calendar');
+      });
+    }
+  }
+
   _fetchToday() {
     if (this.token) {
-      get(`https://student.sbhs.net.au/api/timetable/daytimetable.json?access_token=${encodeURIComponent(this.token)}`, (err, objectString) => {
+      get(`https://student.sbhs.net.au/api/timetable/daytimetable.json?date=2019-04-08&access_token=${encodeURIComponent(this.token)}`, (err, objectString) => {
         if (err)
           return console.error(`Could not load day timetable. Error: ${err}. Data: ${objectString}`); //TODO: Snackbar.
 
@@ -202,7 +224,7 @@ class SBHSStore extends Emitter {
             }
           }
 
-          console.log(subjectData);
+          // console.log(subjectData);
 
           if (subjectData) {
             bells.push({
@@ -236,8 +258,9 @@ class SBHSStore extends Emitter {
           }
         }
 
-        let today = {
+        const today = {
           date: new Date(data['date']),
+          dateRaw: data['date'],
           bells: bells,
           day: data['timetable']['timetable']['dayname'],
           finalized: data['shouldDisplayVariations']

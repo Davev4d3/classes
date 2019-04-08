@@ -1,0 +1,50 @@
+.container {
+    $padding-x: 1rem;
+    $padding-y: 1rem;
+    min-height: 2rem;
+    font-size: 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: $padding-y;
+    padding-right: $padding-x;
+    padding-left: 1.2rem;
+    padding-bottom: $padding-y;
+    background: #3583c1 /*#e8d3c9*/;
+    color: #fafafa;
+    letter-spacing: 0.01rem;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+
+    line-height: 1.2;
+
+    transition: transform 0.5s cubic-bezier(0.755, 0.05, 0.855, 0.06);
+    transform: none;
+    user-select:none;
+}
+
+.text {
+    margin-top: -2px;
+}
+
+.button {
+    color: #fafafa;
+    cursor: pointer;
+    user-select: none;
+    font-size: 18px;
+    padding: 4px;
+    margin-left: 2rem;
+
+    transition: opacity 300ms ease;
+
+    &:hover{
+         opacity: 0.6;
+    }
+}
+
+.container, .text, .button {
+    box-sizing: border-box;
+}

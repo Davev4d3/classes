@@ -34,10 +34,6 @@ a {
   cursor: pointer;
 }
 
-a:hover {
-  color: red;
-}
-
 @media (max-width: 480px) {
   #app { font-size: 14px; }
 }
