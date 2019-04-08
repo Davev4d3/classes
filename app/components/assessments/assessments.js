@@ -86,15 +86,17 @@ class AssessmentManager {
     });
   }
 
-  updateTimetable(periods, dayNumber, week, day){
+  updateTimetable(periods, dayNumber) {
     if (!dayNumber) return false;
     this.fetchData();
 
-    let changed = false;
     const today = this.fetchDay(dayNumber);
     if (today && today.items && today.items.length) {
-      console.log(today.items)
+      periods = today.items.concat(periods);
+      console.log(today.items, periods)
     }
+
+    return periods;
   }
 
   update(bells, date, dateRaw, periods) {

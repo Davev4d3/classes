@@ -71,8 +71,7 @@ export default createReactClass({
     }
 
     if (currentDay && SettingsStore.showAssessments) {
-      console.log(this.state.days);
-      Assessments.updateTimetable(periods, currentDay.dayNumber, this.state.weekday, this.state.week)
+      periods = (Assessments.updateTimetable(periods, currentDay.dayNumber))
     }
 
     return <Centered horizontal vertical>
