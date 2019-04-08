@@ -29,7 +29,6 @@ export class PopupManager extends React.Component {
   };
 
   storePopups = () => {
-    return;
     const popups = this._allPopups;
     if (popups && popups.length) {
       localStorage.setItem('popups', JSON.stringify(popups))
