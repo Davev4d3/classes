@@ -4,6 +4,8 @@ import { findByKey } from '../helpers/findByKey';
 import { Popup } from './popup';
 import SBHSStore from '../../stores/sbhs';
 
+const localStorage = window['localStorage'];
+
 export class PopupManager extends React.Component {
   constructor(props) {
     super(props);
@@ -31,12 +33,18 @@ export class PopupManager extends React.Component {
   storePopups = () => {
     const popups = this._allPopups;
     if (popups && popups.length) {
-      localStorage['popups'] = JSON.stringify(popups)
+      // I literally haven't got a clue why safari private won't let this set, but the others work.
+      // Just gonna wrap in a try catch
+      try {
+        localStorage['popups'] = JSON.stringify(popups)
+      } catch (e) {
+        console.warn(e)
+      }
     }
   };
 
   componentDidMount() {
-    const storedPopups = JSON.parse(localStorage.getItem('popups')) || [];
+    const storedPopups = localStorage['popups'] ? JSON.parse(localStorage['popups']) : [];
     const popups = [];
 
     this._allPopups = [];
