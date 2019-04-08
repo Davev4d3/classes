@@ -201,14 +201,12 @@ class SBHSStore extends Emitter {
 
   _fetchToday() {
     if (this.token) {
-      get(`https://student.sbhs.net.au/api/timetable/daytimetable.json?date=2019-04-08&access_token=${encodeURIComponent(this.token)}`, (err, objectString) => {
-        if (err)
-          return console.error(`Could not load day timetable. Error: ${err}. Data: ${objectString}`); //TODO: Snackbar.
+      get(`https://student.sbhs.net.au/api/timetable/daytimetable.json?access_token=${encodeURIComponent(this.token)}`, (err, objectString) => {
+        if (err) return console.error(`Could not load day timetable. Error: ${err}. Data: ${objectString}`);
 
         let data = JSON.parse(objectString);
 
         let periods = data['timetable']['timetable']['periods'];
-        console.log(periods);
 
         let bells = [], i = {};
         data['bells'].forEach(bell => {
@@ -223,8 +221,6 @@ class SBHSStore extends Emitter {
               subjectData.fullTeacher = periods[id].fullTeacher
             }
           }
-
-          // console.log(subjectData);
 
           if (subjectData) {
             bells.push({
@@ -411,7 +407,8 @@ class SBHSStore extends Emitter {
 
               return {
                 periods: periods,
-                day: rawDays[key]['dayname']
+                day: rawDays[key]['dayname'],
+                dayNumber: key
               };
             })
         };

@@ -81,7 +81,7 @@ export class Popup extends React.PureComponent {
         <span className={s.text}>{this.props.text}</span>
         <a>
           <div className={s.button} onClick={this.state.closeVisible ? this.close : null}
-               style={this.state.closeVisible ? null : {opacity: 0, pointerevents: 'none'}}>x
+               style={this.state.closeVisible ? null : {opacity: 0, pointerevents: 'none', cursor: 'normal'}}>x
           </div>
         </a>
       </div>

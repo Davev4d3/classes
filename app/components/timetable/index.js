@@ -59,18 +59,20 @@ export default createReactClass({
       </Centered>;
 
     let day = this.state.weekday + ' ' + this.state.week, periods;
-    let weekIndex = null;
+    let currentDay = null;
     if (this.state.days) {
       for (let i = this.state.days.length; i--;) {
         if (this.state.days[i].day === day) {
           periods = this.state.days[i].periods;
+          currentDay = this.state.days[i];
           break;
         }
       }
     }
 
-    if (SettingsStore.showAssessments) {
-      console.log(day)
+    if (currentDay && SettingsStore.showAssessments) {
+      console.log(this.state.days);
+      Assessments.updateTimetable(periods, currentDay.dayNumber, this.state.weekday, this.state.week)
     }
 
     return <Centered horizontal vertical>

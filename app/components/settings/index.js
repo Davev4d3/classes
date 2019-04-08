@@ -13,6 +13,7 @@ export default createReactClass({
     return {
       expandNotices: SettingsStore.expandNotices,
       showBreaks: SettingsStore.showBreaks,
+      showAssessments: SettingsStore.showAssessments,
       noticesFilter: SettingsStore.noticesFilter
     };
   },
@@ -21,6 +22,7 @@ export default createReactClass({
     this.setState({
       expandNotices: SettingsStore.expandNotices,
       showBreaks: SettingsStore.showBreaks,
+      showAssessments: SettingsStore.showAssessments,
       noticesFilter: SettingsStore.noticesFilter
     });
   },
@@ -45,6 +47,7 @@ export default createReactClass({
           <div>Like Us</div>
           <div>Expand Notices</div>
           <div>Show Breaks</div>
+          <div>Show Assessments</div>
           <div>Notices Filter</div>
           <div>Content Settings</div>
         </div>
@@ -68,6 +71,10 @@ export default createReactClass({
 
           <div>
             <Toggle enabled={this.state.showBreaks} onChange={(newState) => SettingsStore.update({ showBreaks: newState })} />
+          </div>
+
+          <div>
+            <Toggle enabled={this.state.showAssessments} onChange={(newState) => SettingsStore.update({ showAssessments: newState })} />
           </div>
 
           <div>

@@ -17,7 +17,6 @@ export class PopupManager extends React.Component {
   }
 
   onPopupClosed = (i) => {
-    console.log(i);
     if (i !== undefined) {
       this.setState(prevState => {
         const {popups, oldPopups} = prevState;
@@ -44,13 +43,16 @@ export class PopupManager extends React.Component {
       if (!popupsListElement.title) continue;
 
       const storedElem = findByKey(storedPopups, 'title', popupsListElement.title);
-      console.log(storedElem, storedPopups);
+      if (!storedElem) {
+        popups.push(popupsListElement);
+      } else if (storedElem && !storedElem.read) {
+        popups.push(storedElem);
+      }
 
-      if (!storedElem || (storedElem && !storedElem.read)) popups.push(popupsListElement);
       this._allPopups.push(storedElem ? storedElem : popupsListElement);
     }
 
-    console.log(popups, this._allPopups);
+    // console.log(popups, this._allPopups);
 
     this.setState({popups}, this.storePopups)
   }

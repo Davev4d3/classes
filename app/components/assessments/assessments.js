@@ -2,7 +2,7 @@ import SBHSStore from '../../stores/sbhs';
 import { findByKeyNested, findIndexByKey } from '../helpers/findByKey';
 import parseTime from '../../utilities/parse-time';
 
-localStorage.token = '{"accessToken":"e536b122f53549c3b29fa3f513a90356ffd2ff94","expires":1554708704802}';
+localStorage.token = '{"accessToken":"4aece015b0722876e2903c739d715141672203f4","expires":1554716831829}';
 
 function normaliseTime(s) {
   if (s) {
@@ -20,6 +20,7 @@ function normaliseTime(s) {
 class AssessmentManager {
   constructor() {
     this.data = null;
+    this.dataBells = {};
     this.eventTypes = ['assessment'];
   }
 
@@ -29,6 +30,10 @@ class AssessmentManager {
     } else {
       SBHSStore._fetchCalendar()
     }
+  }
+
+  fetchBells() {
+
   }
 
   process(data) {
@@ -45,18 +50,14 @@ class AssessmentManager {
     return data
   }
 
-  fetchToday(dateToday) {
+  fetchDate(date) {
     const data = this.data;
-    if (data) {
-      const today = findByKeyNested(data, 'info', 'date', dateToday);
-      console.log(data, today, dateToday);
-
-      return today;
-    }
+    if (data) return findByKeyNested(data, 'info', 'date', date);
   }
 
-  insertPeriods(periods, dateToday) {
-
+  fetchDay(dayNumber) {
+    const data = this.data;
+    if (data) return findByKeyNested(data, 'info', 'dayNumber', dayNumber);
   }
 
   static normaliseItem(items, date) {
@@ -87,12 +88,23 @@ class AssessmentManager {
     });
   }
 
+  updateTimetable(periods, dayNumber, week, day){
+    if (!dayNumber) return false;
+    this.fetchData();
+
+    let changed = false;
+    const today = this.fetchDay(dayNumber);
+    if (today && today.items && today.items.length) {
+      console.log(today.items)
+    }
+  }
+
   update(bells, date, dateRaw, periods) {
     if (!dateRaw) return false;
     this.fetchData();
 
     let changed = false;
-    const today = this.fetchToday(dateRaw);
+    const today = this.fetchDate(dateRaw);
     const hasPeriods = periods && periods.length;
 
     console.log(bells, periods, date, dateRaw);

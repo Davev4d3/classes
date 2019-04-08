@@ -79,11 +79,8 @@ export default createReactClass({
 
   getAssessments() {
     const bells = this.state.bells;
-    const periods = this.state.periods;
-
-    console.log('assessments');
-
     if (SettingsStore.showAssessments && bells) {
+      const periods = this.state.periods;
       if (Assessments.update(bells, this.state.date, this.state.dateRaw, periods)) {
         console.log(bells);
         this.setState({bells, periods})
