@@ -2,8 +2,6 @@ import SBHSStore from '../../stores/sbhs';
 import { findByKeyNested, findIndexByKey } from '../helpers/findByKey';
 import parseTime from '../../utilities/parse-time';
 
-localStorage.token = '{"accessToken":"4aece015b0722876e2903c739d715141672203f4","expires":1554716831829}';
-
 function normaliseTime(s) {
   if (s) {
     const nColons = s.split(':').length - 1;
