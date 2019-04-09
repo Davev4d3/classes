@@ -15,11 +15,24 @@ import { Assessments } from '../assessments/assessments';
 
 const VARIATION_COLOR = '#00BFFF';
 
-const BREAKS = ['Lunch 1', 'Recess'];
+const BREAKS = {
+  'Lunch 1': 'Lunch',
+  'Recess': null
+};
 
 function filterClasses(bells) {
+  const b = Object.keys(BREAKS);
   if (SettingsStore.showBreaks) {
-    return bells.filter(bell => bell.isPeriod || BREAKS.includes(bell.title))
+    return bells.filter(bell => {
+      if (bell.isPeriod) return true;
+      if (b.includes(bell.title)) {
+        const newTitle = BREAKS[bell.title];
+        if (newTitle) {
+          bell.title = newTitle
+        }
+        return true;
+      }
+    })
   } else {
     return bells.filter(bell => bell.isPeriod)
   }
@@ -82,8 +95,8 @@ export default createReactClass({
     if (SettingsStore.showAssessments && bells) {
       const periods = this.state.periods;
       if (Assessments.update(bells, this.state.date, this.state.dateRaw, periods)) {
-        console.log(bells);
-        this.setState({bells, periods})
+        this.setState({bells, periods});
+        console.log('today state', periods);
       }
     }
   },
@@ -105,7 +118,7 @@ export default createReactClass({
 
   render() {
     let {periods, nextBell, nextTime} = this.state,
-      simple = !periods.some(e => e.room);
+      simple = !periods.some(e => e.room || e.isAssessment);
 
     return <Centered vertical horizontal>
       {nextBell ? <div className={STYLE.next}>
@@ -140,7 +153,7 @@ export default createReactClass({
             return <div
               key={i}
               className={STYLE.period}
-              style={{'color': '#757575'}}>
+              style={bell.isAssessment ? null : {'color': '#757575'}}>
               <div style={{
                 'flexGrow': '1',
                 'fontSize': '1.2em',

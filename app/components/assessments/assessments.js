@@ -80,7 +80,9 @@ class AssessmentManager {
         time: timeStart ? timeStart : null,
         from: timeStart ? parseTime(new Date(date.getTime()), timeStart) : null,
         to: timeEnd ? parseTime(new Date(date.getTime()), timeEnd) : null,
+        toRaw: timeEnd ? timeEnd : null,
         isPeriod: true,
+        isAssessment: true,
         variations
       }
     });
@@ -107,11 +109,11 @@ class AssessmentManager {
     const today = this.fetchDate(dateRaw);
     const hasPeriods = periods && periods.length;
 
-    console.log(bells, periods, date, dateRaw);
+    // console.log(bells, periods, date, dateRaw);
 
     if (today && today.items && today.items.length) {
       const items = this.constructor.normaliseItem(today.items, date);
-      // console.log('today', items);
+      console.log('assessments today', items);
 
       // for (let i = bells.length - 1; i >= 0; i--) {
       for (let i = 0; i < bells.length; i++) {
@@ -119,36 +121,37 @@ class AssessmentManager {
         parseTime(date, bell.time);
 
         for (const assess of items) {
-          const assessmentInPeriod = assess.from < date && date < assess.to;
-          // console.log(assessmentInPeriod, assess.from, date);
+          const assessmentInPeriod = Boolean(assess.from < date && date < assess.to);
 
           if (assessmentInPeriod) {
             changed = true;
-            const modifyPeriod = bell.isPeriod && hasPeriods;
+            const modifyPeriod = hasPeriods; // && bell.isPeriod
+            const periodIndex = modifyPeriod ? findIndexByKey(periods, 'title', bell.title) : null;
+            console.log(assessmentInPeriod, bell.title, assess.title, periodIndex);
 
-            if (bells[i - 1] !== assess) {
-              bells[i] = assess;
+            if (periodIndex !== -1) {
+              const prevPeriod = periods[periodIndex - 1];
+              if (prevPeriod && prevPeriod === assess) {
+                periods.splice(periodIndex, 1);
+                console.log('removing period ' + (periodIndex) + ' ' + periods[periodIndex].title)
 
-              if (modifyPeriod) {
-                const periodIndex = findIndexByKey(periods, 'title', bell.title);
+              } else {
                 periods[periodIndex] = assess;
               }
-            } else {
+            }
+
+            if (bells[i - 1] && bells[i - 1] === assess) {
               bells.splice(i, 1);
               i--;
-
-              if (modifyPeriod) {
-                const periodIndex = findIndexByKey(periods, 'title', bell.title);
-                periods.splice(periodIndex, 1);
-                console.log('removing period ' + (periodIndex))
-              }
+            } else {
+              bells[i] = assess;
             }
           }
         }
       }
     }
 
-    console.log(bells)
+    console.log(bells, periods);
 
     return changed;
   }
