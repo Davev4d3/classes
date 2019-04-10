@@ -12,7 +12,7 @@ import NetworkStore from './network';
 
 let localStorage = window['localStorage'];
 
-const MS_TO_WEEKS = 1/(1000 * 60 * 60 * 24 * 7);
+const MS_TO_WEEKS = 1 / (1000 * 60 * 60 * 24 * 7);
 const THU2SUN = -1000 * 60 * 60 * 24 * 4;
 
 const REFRESH_MIN = 15 * 1000;
@@ -23,6 +23,15 @@ class SBHSStore extends Emitter {
     super();
 
     console.log('init data store');
+
+    this._date = '';
+    if (location && location.hash) {
+      const h = location.hash.substr(1);
+      if (h.length === 10 && h.charAt(4) === '-' && h.charAt(7) === '-') {
+        this._date = '&date=' + h;
+        console.log('DATE OVERRIDE: ' + h);
+      }
+    }
 
     this.LOADING = 0;
     this.LOGGED_IN = 1;
@@ -205,7 +214,7 @@ class SBHSStore extends Emitter {
     if (this.token && this.calendar === undefined) {
       this.calendar = null;
 
-      get(`https://student.sbhs.net.au/api/diarycalendar/events.json?access_token=${encodeURIComponent(this.token)}`, (err, objectString) => {
+      get(`https://student.sbhs.net.au/api/diarycalendar/events.json?access_token=${encodeURIComponent(this.token)}`+this._date, (err, objectString) => {
         if (err) return;
 
         const data = JSON.parse(objectString);
@@ -218,7 +227,7 @@ class SBHSStore extends Emitter {
 
   _fetchToday() {
     if (this.token) {
-      get(`https://student.sbhs.net.au/api/timetable/daytimetable.json?access_token=${encodeURIComponent(this.token)}`, (err, objectString) => {
+      get(`https://student.sbhs.net.au/api/timetable/daytimetable.json?access_token=${encodeURIComponent(this.token)}`+this._date, (err, objectString) => {
         if (err) return console.error(`Could not load day timetable. Error: ${err}. Data: ${objectString}`);
 
         let data = JSON.parse(objectString);
@@ -345,7 +354,7 @@ class SBHSStore extends Emitter {
               meeting: notice['isMeeting'] ? {
                 date: +(new Date(notice['meetingDate'])),
                 time: notice['meetingTime']
-              } :null
+              } : null
             };
           })
         };
@@ -375,7 +384,7 @@ class SBHSStore extends Emitter {
               subject: subject['subject'],
               teacher: subject['fullTeacher']
             };
-        });
+          });
 
         let rawStudent = data['student'];
         let rawDays = data['days'];
@@ -408,9 +417,9 @@ class SBHSStore extends Emitter {
 
                   //TODO: Remove this when they fix the API for accelerants.
                   let subject = subjects[j] || {
-                      title: abbr,
-                      teacher: rawPeriod['teacher']
-                    };
+                    title: abbr,
+                    teacher: rawPeriod['teacher']
+                  };
 
                   periods.push({
                     title: subject.title,
