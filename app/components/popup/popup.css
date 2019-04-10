@@ -40,8 +40,6 @@
     user-select: none;
     font-size: 18px;
     padding: 4px;
-    margin-left: 2rem;
-
     transition: opacity 300ms ease;
 
     &:hover{
@@ -49,6 +47,10 @@
     }
 }
 
-.container, .text, .button {
+.buttonContainer {
+    margin-left: 2rem;
+}
+
+.container, .text, .button, .buttonContainer {
     box-sizing: border-box;
 }

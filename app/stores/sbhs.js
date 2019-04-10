@@ -1,9 +1,9 @@
 import Emitter from '../utilities/emitter';
-import {get} from '../utilities/request';
+import { get } from '../utilities/request';
 import parseTime from '../utilities/parse-time';
 
 import defaultBells from '../data/default-bells';
-import {DAYS, WEEKS} from '../data/day-constants';
+import { DAYS, WEEKS } from '../data/day-constants';
 
 import Timer from '../utilities/timer';
 
@@ -14,6 +14,9 @@ let localStorage = window['localStorage'];
 
 const MS_TO_WEEKS = 1/(1000 * 60 * 60 * 24 * 7);
 const THU2SUN = -1000 * 60 * 60 * 24 * 4;
+
+const REFRESH_MIN = 15 * 1000;
+const REFRESH_MAX_TIMEOUT = 4 * 24 * 3600000;
 
 class SBHSStore extends Emitter {
   constructor() {
@@ -40,14 +43,28 @@ class SBHSStore extends Emitter {
     });
 
     this.bind('today', () => {
-      // stop infinite loop at 3:15, add one minute
-      const date = new Date(parseTime(new Date(this.today.date), this.today.bells[this.today.bells.length - 1].time).getTime() + 61000);
+      // timer fires too close together at 3:15. space apart using minimum interval.
+      const date = new Date(parseTime(new Date(this.today.date), this.today.bells[this.today.bells.length - 1].time).getTime());
+      const timeDiff = date - Date.now();
+      let interval;
 
-      if (0) Timer(() => {
+      const func = () => {
         this._defaultToday();
         this._fetchToday();
         this._fetchNotices();
-      }, date);
+      };
+
+      if (timeDiff > 0) {
+        if (timeDiff > REFRESH_MAX_TIMEOUT) return Timer(func, date);
+        interval = timeDiff > REFRESH_MIN ? timeDiff : REFRESH_MIN;
+      } else if (timeDiff === 0) {
+        return func()
+      } else {
+        interval = REFRESH_MIN;
+      }
+
+      console.log('timer', interval);
+      setTimeout(func, interval);
     });
 
     setInterval(() => {

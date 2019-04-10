@@ -1,4 +1,4 @@
-let timers = [];
+const timers = [];
 
 window.setInterval(function () {
   let now = Date.now();
@@ -12,7 +12,7 @@ window.setInterval(function () {
       i += 1;
     }
   }
-}, 1000);
+}, 60000);
 
 export default function (func, date) {
   timers.push({
