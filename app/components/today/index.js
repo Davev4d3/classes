@@ -17,6 +17,7 @@ const VARIATION_COLOR = '#00BFFF';
 
 const BREAKS = {
   'Lunch 1': 'Lunch',
+  'Lunch': null,
   'Recess': null
 };
 
@@ -27,9 +28,7 @@ function filterClasses(bells) {
       if (bell.isPeriod) return true;
       if (b.includes(bell.title)) {
         const newTitle = BREAKS[bell.title];
-        if (newTitle) {
-          bell.title = newTitle
-        }
+        if (newTitle) bell.title = newTitle;
         return true;
       }
     })
