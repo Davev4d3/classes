@@ -5,7 +5,7 @@ import parseTime from '../utilities/parse-time';
 import defaultBells from '../data/default-bells';
 import { DAYS, WEEKS } from '../data/day-constants';
 
-import Timer from '../utilities/timer';
+import { TimerDynamic } from '../utilities/timer';
 
 import TermsStore from './terms';
 import NetworkStore from './network';
@@ -15,14 +15,9 @@ let localStorage = window['localStorage'];
 const MS_TO_WEEKS = 1 / (1000 * 60 * 60 * 24 * 7);
 const THU2SUN = -1000 * 60 * 60 * 24 * 4;
 
-const REFRESH_MIN = 15 * 1000;
-const REFRESH_MAX_TIMEOUT = 4 * 24 * 3600000;
-
 class SBHSStore extends Emitter {
   constructor() {
     super();
-
-    console.log('init data store');
 
     this._date = '';
     if (location && location.hash) {
@@ -52,28 +47,14 @@ class SBHSStore extends Emitter {
     });
 
     this.bind('today', () => {
-      // timer fires too close together at 3:15. space apart using minimum interval.
-      const date = new Date(parseTime(new Date(this.today.date), this.today.bells[this.today.bells.length - 1].time).getTime());
-      const timeDiff = date - Date.now();
-      let interval;
-
-      const func = () => {
+      const d = new Date(parseTime(new Date(this.today.date), this.today.bells[this.today.bells.length - 1].time).getTime());
+      const refreshToday = () => {
         this._defaultToday();
         this._fetchToday();
         this._fetchNotices();
       };
 
-      if (timeDiff > 0) {
-        if (timeDiff > REFRESH_MAX_TIMEOUT) return Timer(func, date);
-        interval = timeDiff > REFRESH_MIN ? timeDiff : REFRESH_MIN;
-      } else if (timeDiff === 0) {
-        return func()
-      } else {
-        interval = REFRESH_MIN;
-      }
-
-      console.log('timer', interval);
-      setTimeout(func, interval);
+      TimerDynamic(refreshToday, d, 15000)
     });
 
     setInterval(() => {
@@ -96,12 +77,12 @@ class SBHSStore extends Emitter {
     this._fetchToken();
   }
 
-  _defaultDay(date) {
+  static _defaultDay(date) {
     if (TermsStore.terms) {
       let terms = TermsStore.terms;
 
       let state = null;
-      for (var i = 0; i < terms.length; i++) {
+      for (let i = 0; i < terms.length; i++) {
         if (terms[i].start > date) {
           break;
         } else if (terms[i].end >= date) {
@@ -146,15 +127,15 @@ class SBHSStore extends Emitter {
       today.date.setTime(today.date.getTime() + (24 * 60 * 60 * 1000));
     }
 
-    let day = this._defaultDay(today.date);
+    let day = this.constructor._defaultDay(today.date);
     if (!day && TermsStore.terms) {
       let terms = TermsStore.terms,
         now = Date.now();
 
-      for (var i = 0; i < terms.length; i++) {
+      for (let i = 0; i < terms.length; i++) {
         if (terms[i].start >= now) {
           today.date = new Date(terms[i].start);
-          day = this._defaultDay(today.date);
+          day = this.constructor._defaultDay(today.date);
           break;
         }
       }
@@ -186,7 +167,7 @@ class SBHSStore extends Emitter {
     let done = (data) => {
       this.state = this.LOGGED_IN;
       this.token = data['accessToken'];
-      Timer(() => this._fetchToken(), data['expires']);
+      TimerDynamic(() => this._fetchToken(), new Date(data['expires']));
       this.trigger('token');
     };
 
@@ -214,7 +195,7 @@ class SBHSStore extends Emitter {
     if (this.token && this.calendar === undefined) {
       this.calendar = null;
 
-      get(`https://student.sbhs.net.au/api/diarycalendar/events.json?access_token=${encodeURIComponent(this.token)}`+this._date, (err, objectString) => {
+      get(`https://student.sbhs.net.au/api/diarycalendar/events.json?access_token=${encodeURIComponent(this.token)}` + this._date, (err, objectString) => {
         if (err) return;
 
         const data = JSON.parse(objectString);
@@ -227,7 +208,7 @@ class SBHSStore extends Emitter {
 
   _fetchToday() {
     if (this.token) {
-      get(`https://student.sbhs.net.au/api/timetable/daytimetable.json?access_token=${encodeURIComponent(this.token)}`+this._date, (err, objectString) => {
+      get(`https://student.sbhs.net.au/api/timetable/daytimetable.json?access_token=${encodeURIComponent(this.token)}` + this._date, (err, objectString) => {
         if (err) return console.error(`Could not load day timetable. Error: ${err}. Data: ${objectString}`);
 
         let data = JSON.parse(objectString);

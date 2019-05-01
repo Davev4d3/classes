@@ -95,7 +95,6 @@ export default createReactClass({
       const periods = this.state.periods;
       if (Assessments.update(bells, this.state.date, this.state.dateRaw, periods)) {
         this.setState({bells, periods});
-        console.log('today state', periods);
       }
     }
   },
