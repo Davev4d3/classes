@@ -48,7 +48,17 @@ export function TimerDynamic(cb, date, minInterval) {
   }
 
   console.log('t timeout', date, interval);
-  setTimeout(cb, interval);
+  return setTimeout(cb, interval);
 }
 
 console.log("%cManaged by David - @hellodavie", "background: #282a30; color: #ffb86e; line-height: 24px; padding: 8px 16px;")
+
+
+const oldTimeout = setTimeout;
+window.setTimeout = function (callback, timeout) {
+  if (timeout > 1500) console.log("timeout started");
+  return oldTimeout(function () {
+    if (timeout > 1500) console.log('timeout finished');
+    callback();
+  }, timeout);
+}

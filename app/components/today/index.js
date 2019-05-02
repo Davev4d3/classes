@@ -46,7 +46,10 @@ export default createReactClass({
       dateRaw: null,
 
       nextTime: null,
-      nextBell: null
+      nextBell: null,
+
+      hasClasses: false,
+      lastClassBell: null
     };
   },
 
@@ -56,7 +59,9 @@ export default createReactClass({
         bells: SBHSStore.today.bells,
         periods: filterClasses(SBHSStore.today.bells),
         date: SBHSStore.today.date,
-        dateRaw: SBHSStore.today.dateRaw
+        dateRaw: SBHSStore.today.dateRaw,
+        hasClasses: SBHSStore.today.hasClasses,
+        lastClassBell: SBHSStore.today.lastClassBell
       }, this.getNext);
     }
   },
@@ -89,13 +94,27 @@ export default createReactClass({
     });
   },
 
+  setLastPeriodTimeout() {
+    if (!this.state.hasClasses || !this.state.lastClassBell) return;
+    console.log(this.state)
+  },
+
   getAssessments() {
     const bells = this.state.bells;
+    let newState = null;
+
     if (SettingsStore.showAssessments && bells) {
       const periods = this.state.periods;
       if (Assessments.update(bells, this.state.date, this.state.dateRaw, periods)) {
-        this.setState({bells, periods});
+        newState = {bells, periods};
       }
+    }
+
+    const shouldLoadNextDay = SettingsStore.loadNextDay || true;
+    if (newState) {
+      this.setState(newState, shouldLoadNextDay ? this.setLastPeriodTimeout : undefined);
+    } else if (shouldLoadNextDay) {
+      this.setLastPeriodTimeout()
     }
   },
 

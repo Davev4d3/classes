@@ -215,7 +215,20 @@ class SBHSStore extends Emitter {
 
         let periods = data['timetable']['timetable']['periods'];
 
-        let bells = [], i = {};
+        let bells = [];
+        let i = {};
+
+        let lastClassBell = null;
+        for (let j = data['bells'].length - 1; j >= 0; j--) {
+          const b = data['bells'][j];
+          if (periods[b.bell]) {
+            lastClassBell = j;
+            break
+          }
+        }
+
+        console.log(lastClassBell)
+
         data['bells'].forEach(bell => {
           let id = bell['bell'];
           i[id] = bells.length;
@@ -266,12 +279,10 @@ class SBHSStore extends Emitter {
           dateRaw: data['date'],
           bells: bells,
           day: data['timetable']['timetable']['dayname'],
-          finalized: data['shouldDisplayVariations']
+          finalized: data['shouldDisplayVariations'],
+          hasClasses: true,
+          lastClassBell
         };
-
-        //TODO: Snackbar.
-        // if (parseTime(new Date(today.date), today.bells[today.bells.length - 1].time) < Date.now())
-        //   return console.error('Dear lord I think we\'ve travelled through time!');
 
         this.today = today;
         this.trigger('today');
