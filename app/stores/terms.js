@@ -3,6 +3,7 @@ import {get} from '../utilities/request';
 import {WEEKS} from '../data/day-constants';
 
 import NetworkStore from './network';
+import { TimerDynamic } from '../utilities/timer';
 
 let localStorage = window['localStorage'];
 
@@ -52,15 +53,13 @@ class TermsStore extends Emitter {
     this.terms = terms;
     localStorage['terms'] = JSON.stringify(terms);
 
-    let lastDay = getLastDay(terms);
-
-    let timeToYearEnd = lastDay - Date.now();
-    setTimeout(() => this.fetch(), timeToYearEnd);
+    const lastDay = getLastDay(terms);
+    TimerDynamic(this.fetch, lastDay, 15000);
 
     this.trigger('terms');
   }
 
-  fetch() {
+  fetch = () => {
     let year = new Date().getFullYear();
 
     get(`https://student.sbhs.net.au/api/calendar/terms.json?year=${year}`, (err, res) => {
