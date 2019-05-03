@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Today from '../today';
+import { Today } from '../today';
 import Timetable from '../timetable';
 import Notices from '../notices';
 import Settings from '../settings';
@@ -16,9 +16,9 @@ import STYLE from './style.css';
 import createReactClass from 'create-react-class';
 
 function button(icon, tooltip) {
-  return <div className={STYLE.item +' '+ STYLE.button} title={tooltip}>
-      <Icon icon={icon} />
-    </div>;
+  return <div className={STYLE.item + ' ' + STYLE.button} title={tooltip}>
+    <Icon icon={icon}/>
+  </div>;
 }
 
 export default createReactClass({
@@ -48,25 +48,27 @@ export default createReactClass({
 
   render() {
     let tabs = [
-      {button: button('timer', 'Today'), content: <Today />},
-      {button: button('calendar', 'Timetable'), content: <Timetable />},
-      {button: button('news', 'Daily Notices'), content: <Notices />},
-      {button: button('settings', 'Settings'), content: <Settings />},
+      {button: button('timer', 'Today'), content: <Today/>},
+      {button: button('calendar', 'Timetable'), content: <Timetable/>},
+      {button: button('news', 'Daily Notices'), content: <Notices/>},
+      {button: button('settings', 'Settings'), content: <Settings/>},
       {}];
 
     if (!this.state.online) {
-      tabs.push({button:
-        <div className={STYLE.item} title='Offline'>
-          <Icon icon='disconnected' />
-        </div>
+      tabs.push({
+        button:
+          <div className={STYLE.item} title='Offline'>
+            <Icon icon='disconnected'/>
+          </div>
       });
     } else {
       switch (this.state.auth) {
         case SBHSStore.LOADING:
-          tabs.push({button:
-            <div className={STYLE.item} title='Loading…'>
-              <Loader style={{ width: 30, height: 30 }} />
-            </div>
+          tabs.push({
+            button:
+              <div className={STYLE.item} title='Loading…'>
+                <Loader style={{width: 30, height: 30}}/>
+              </div>
           });
           break;
         case SBHSStore.LOGGED_IN:
@@ -89,6 +91,6 @@ export default createReactClass({
       }
     }
 
-    return <Tabs tabs={tabs} />;
+    return <Tabs tabs={tabs}/>;
   }
 });

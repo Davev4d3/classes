@@ -38,9 +38,11 @@ function filterClasses(bells) {
   }
 }
 
-export default createReactClass({
-  getInitialState() {
-    return {
+export class Today extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       bells: null,
       periods: null,
       date: null,
@@ -52,9 +54,11 @@ export default createReactClass({
       hasClasses: false,
       lastClassBell: null
     };
-  },
 
-  getData() {
+    this._nextDayTimeout = null;
+  }
+
+  getData = () => {
     if (SBHSStore.today) {
       this.setState({
         bells: SBHSStore.today.bells,
@@ -65,9 +69,9 @@ export default createReactClass({
         lastClassBell: SBHSStore.today.lastClassBell
       }, this.getNext);
     }
-  },
+  };
 
-  getNext() {
+  getNext = () => {
     let bells = this.state.bells;
 
     if (bells) {
@@ -99,18 +103,20 @@ export default createReactClass({
     if (SettingsStore.loadNextDay) {
       this.setLastPeriodTimeout()
     }
-  },
+  };
 
   setLastPeriodTimeout() {
     if (!this.state.hasClasses || !this.state.lastClassBell) return;
-    TimerDynamic(this.setNextDay, this.state.lastClassBell, 1000, false)
-  },
+    if (this._nextDayTimeout) clearTimeout(this._nextDayTimeout);
 
-  setNextDay() {
+    TimerDynamic(this.setNextDay, this.state.lastClassBell, 1000, false)
+  }
+
+  setNextDay = () => {
     this.setState({lastClassBell: null});
-    console.log('next day')
+    console.log('next day');
     SBHSStore.trigger('next_day');
-  },
+  };
 
   getAssessments(cb) {
     const bells = this.state.bells;
@@ -121,22 +127,23 @@ export default createReactClass({
         this.setState({bells, periods}, cb ? cb : undefined);
       }
     }
-  },
+  }
 
-  onCalendarFetch() {
+  onCalendarFetch = () => {
     this.getAssessments()
-  },
+  };
 
   componentWillMount() {
     SBHSStore.bind('today', this.getData);
     SBHSStore.bind('calendar', this.onCalendarFetch);
     this.getData();
-  },
+  }
 
   componentWillUnmount() {
     SBHSStore.unbind('today', this.getData);
     SBHSStore.unbind('calendar', this.onCalendarFetch);
-  },
+    if (this._nextDayTimeout) clearTimeout(this._nextDayTimeout);
+  }
 
   render() {
     let {periods, nextBell, nextTime} = this.state,
@@ -226,4 +233,4 @@ export default createReactClass({
       </div> : null}
     </Centered>;
   }
-});
+}
