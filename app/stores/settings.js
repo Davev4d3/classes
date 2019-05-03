@@ -7,6 +7,7 @@ class SettingsStore extends Emitter {
     super();
 
     this.expandNotices = JSON.parse(localStorage['expandNotices'] || false); // true, false
+    this.loadNextDay = JSON.parse(localStorage['loadNextDay'] || true);
     this.showBreaks = JSON.parse(localStorage['showBreaks'] || true); // bool
     this.showAssessments = JSON.parse(localStorage['showAssessments'] || true); // bool
     this.noticesFilter = JSON.parse(localStorage['noticesFilter'] || null); // null, '7', '8', '9', '10', '11', '12', 'Staff'

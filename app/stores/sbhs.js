@@ -75,7 +75,34 @@ class SBHSStore extends Emitter {
     });
 
     this._fetchToken();
+
+    this.bind('next_day', this.getNextDay)
   }
+
+  setDate = (dateString) => {
+    if (dateString) this._date = '&date=' + encodeURIComponent(dateString);
+    else this._date = '';
+  };
+
+  getNextDay = () => {
+    function getNextWeekday(d) {
+      const day = d.getDay();
+      let add = 1;
+      if (day === 5) add = 3;
+      else if (day === 6) add = 2;
+
+      d.setDate(d.getDate() + add);
+      return d;
+    }
+
+    let d = new Date(this.today.date);
+    d = getNextWeekday(d);
+    const dateString = d.getFullYear() + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    console.log(dateString);
+
+    this.setDate(dateString);
+    this._fetchToday();
+  };
 
   static _defaultDay(date) {
     if (TermsStore.terms) {
@@ -222,12 +249,12 @@ class SBHSStore extends Emitter {
         for (let j = data['bells'].length - 1; j >= 0; j--) {
           const b = data['bells'][j];
           if (periods[b.bell]) {
-            lastClassBell = j;
+            j++;
+            if (j >= data['bells'].length - 1) break;
+            lastClassBell = parseTime(new Date(data['date']), data['bells'][j].time);
             break
           }
         }
-
-        console.log(lastClassBell)
 
         data['bells'].forEach(bell => {
           let id = bell['bell'];

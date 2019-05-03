@@ -12,6 +12,7 @@ import STYLE from './style.css';
 
 import SettingsStore from '../../stores/settings';
 import { Assessments } from '../assessments/assessments';
+import { TimerDynamic } from '../../utilities/timer';
 
 const VARIATION_COLOR = '#00BFFF';
 
@@ -80,41 +81,45 @@ export default createReactClass({
         parseTime(date, bell.time);
 
         if (date > now) {
-          return this.setState({
+          this.setState({
             nextBell: bell,
             nextTime: date
           });
+
+          break;
         }
       }
+    } else {
+      this.setState({
+        nextBell: null,
+        nextTime: null
+      })
     }
 
-    this.setState({
-      nextBell: null,
-      nextTime: null
-    });
+    if (SettingsStore.loadNextDay) {
+      this.setLastPeriodTimeout()
+    }
   },
 
   setLastPeriodTimeout() {
     if (!this.state.hasClasses || !this.state.lastClassBell) return;
-    console.log(this.state)
+    TimerDynamic(this.setNextDay, this.state.lastClassBell, 1000, false)
   },
 
-  getAssessments() {
-    const bells = this.state.bells;
-    let newState = null;
+  setNextDay() {
+    this.setState({lastClassBell: null});
+    console.log('next day')
+    SBHSStore.trigger('next_day');
+  },
 
+  getAssessments(cb) {
+    const bells = this.state.bells;
     if (SettingsStore.showAssessments && bells) {
       const periods = this.state.periods;
-      if (Assessments.update(bells, this.state.date, this.state.dateRaw, periods)) {
-        newState = {bells, periods};
-      }
-    }
 
-    const shouldLoadNextDay = SettingsStore.loadNextDay || true;
-    if (newState) {
-      this.setState(newState, shouldLoadNextDay ? this.setLastPeriodTimeout : undefined);
-    } else if (shouldLoadNextDay) {
-      this.setLastPeriodTimeout()
+      if (Assessments.update(bells, this.state.date, this.state.dateRaw, periods)) {
+        this.setState({bells, periods}, cb ? cb : undefined);
+      }
     }
   },
 

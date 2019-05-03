@@ -14,7 +14,8 @@ export default createReactClass({
       expandNotices: SettingsStore.expandNotices,
       showBreaks: SettingsStore.showBreaks,
       showAssessments: SettingsStore.showAssessments,
-      noticesFilter: SettingsStore.noticesFilter
+      noticesFilter: SettingsStore.noticesFilter,
+      loadNextDay: SettingsStore.loadNextDay
     };
   },
 
@@ -23,7 +24,8 @@ export default createReactClass({
       expandNotices: SettingsStore.expandNotices,
       showBreaks: SettingsStore.showBreaks,
       showAssessments: SettingsStore.showAssessments,
-      noticesFilter: SettingsStore.noticesFilter
+      noticesFilter: SettingsStore.noticesFilter,
+      loadNextDay: SettingsStore.loadNextDay
     });
   },
 
@@ -46,6 +48,7 @@ export default createReactClass({
         <div className={STYLE.labels}>
           <div>Like Us</div>
           <div>Expand Notices</div>
+          <div title={'If you have a free period, this will load tomorrow\'s timetable'}>Load Next Day</div>
           <div>Show Breaks</div>
           <div>Show Assessments</div>
           <div>Notices Filter</div>
@@ -67,6 +70,10 @@ export default createReactClass({
 
           <div>
             <Toggle enabled={this.state.expandNotices} onChange={(newState) => SettingsStore.update({ expandNotices: newState })} />
+          </div>
+
+          <div>
+            <Toggle enabled={this.state.loadNextDay} onChange={(newState) => SettingsStore.update({ loadNextDay: newState })} />
           </div>
 
           <div>

@@ -1,4 +1,4 @@
-const TIMER_INTERVAL = 60 * 1000 * 5;
+const TIMER_INTERVAL = 60 * 1000 * 15;
 const TIMER_MAX_TIMEOUT = 4 * 24 * 3600000;
 
 const timers = [];
@@ -28,21 +28,25 @@ export function TimerPolling(func, date) {
 }
 
 
-export function TimerDynamic(cb, date, minInterval) {
+export function TimerDynamic(cb, date, minInterval, usePolling = true) {
   if (!date) return;
   const timeDiff = date - Date.now();
   let interval;
-  console.log('t init', date, interval);
+  console.log('t init', date, interval, usePolling);
 
   if (timeDiff > 0) {
-    if (timeDiff > TIMER_MAX_TIMEOUT) return TimerPolling(cb, date);
+    if (timeDiff > TIMER_MAX_TIMEOUT) {
+      if (usePolling) return TimerPolling(cb, date); else return;
+    }
+
     if (minInterval) {
       interval = Math.max(minInterval, timeDiff);
     } else {
       interval = timeDiff;
     }
   } else if (!minInterval || timeDiff === 0) {
-    return cb();
+    cb();
+    return;
   } else {
     interval = minInterval;
   }
