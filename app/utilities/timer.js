@@ -1,28 +1,23 @@
-const TIMER_INTERVAL = 60 * 1000 * 15;
 const TIMER_MAX_TIMEOUT = 4 * 24 * 3600000;
+const TIMER_INTERVAL = TIMER_MAX_TIMEOUT + 60 * 1000 * 1;
 
-const timers = [];
+let timers = [];
 let timerChecker;
 
 export function TimerPolling(func, date) {
   timers.push({
-    func: func,
+    cb: func,
     date: date
   });
 
   console.log('tpolling', date);
 
-  if (!timerChecker) timerChecker = window.setInterval(function () {
-    let now = Date.now();
-
-    let i = 0;
-    while (i < timers.length) {
-      if (timers[i].date < now) {
-        timers[i].func(now);
-        timers.splice(i, 1);
-      } else {
-        i += 1;
-      }
+  if (!timerChecker) timerChecker = window.setTimeout(function () {
+    const temp = timers;
+    timers = [];
+    for (let i = 0; i < temp.length; i++) {
+      const t = temp[i];
+      TimerDynamic(t.cb, t.date, 20000, true)
     }
   }, TIMER_INTERVAL)
 }
@@ -32,7 +27,7 @@ export function TimerDynamic(cb, date, minInterval, usePolling = true) {
   if (!date) return;
   const timeDiff = date - Date.now();
   let interval;
-  console.log('t init', date, interval, usePolling);
+  console.log('t init', date, minInterval, usePolling);
 
   if (timeDiff > 0) {
     if (timeDiff > TIMER_MAX_TIMEOUT) {
@@ -56,13 +51,3 @@ export function TimerDynamic(cb, date, minInterval, usePolling = true) {
 }
 
 console.log("%cManaged by David - @hellodavie", "background: #282a30; color: #ffb86e; line-height: 24px; padding: 8px 16px;")
-
-
-const oldTimeout = setTimeout;
-window.setTimeout = function (callback, timeout) {
-  if (timeout > 1500) console.log("timeout started");
-  return oldTimeout(function () {
-    if (timeout > 1500) console.log('timeout finished');
-    callback();
-  }, timeout);
-}
