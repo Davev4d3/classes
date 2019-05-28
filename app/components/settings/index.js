@@ -56,7 +56,7 @@ export default createReactClass({
         </div>
 
         <div className={STYLE.controls}>
-          <div style={{'border': 'none', 'width': '90px', 'height': '20px'}}>
+          <div style={{'width': '90px', 'height': '48px'}}>
           </div>
 
           <div>
