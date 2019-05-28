@@ -5,6 +5,11 @@
   flex-direction: column;
   align-items: stretch;
   box-sizing: border-box;
+
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .notice {
@@ -14,4 +19,13 @@
 .title {
   cursor: pointer;
   user-select: none;
+}
+
+.titleInner {
+  font-size: 1.2em;
+}
+
+.author {
+  font-size: 0.8em;
+  color: #757575
 }

@@ -9,5 +9,5 @@ export default function (props) {
     'minHeight': '100%',
     'minWidth': '100%',
     'flexGrow': '1'
-  }} children={props.children} />;
+  }} children={props.children}/>;
 }

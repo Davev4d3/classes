@@ -46,7 +46,7 @@ export default createReactClass({
     return <Centered vertical horizontal>
       <div className={STYLE.settings}>
         <div className={STYLE.labels}>
-          <div>Like Us</div>
+          <div>Classes</div>
           <div>Expand Notices</div>
           <div title={'If you have a free period, this will load tomorrow\'s timetable'}>Load Next Day</div>
           <div>Show Breaks</div>
@@ -56,16 +56,7 @@ export default createReactClass({
         </div>
 
         <div className={STYLE.controls}>
-          <div>
-            <iframe
-              src={`//facebook.com/plugins/like?href=${
-                encodeURIComponent(window.location.protocol + '//' + window.location.hostname)
-              }&layout=button_count`}
-              scrolling='no'
-              frameborder='0'
-              style={{'border': 'none', 'width': '90px', 'height': '20px'}}
-              allowTransparency='true'>
-            </iframe>
+          <div style={{'border': 'none', 'width': '90px', 'height': '20px'}}>
           </div>
 
           <div>
