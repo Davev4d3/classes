@@ -15,6 +15,10 @@ let localStorage = window['localStorage'];
 const MS_TO_WEEKS = 1 / (1000 * 60 * 60 * 24 * 7);
 const THU2SUN = -1000 * 60 * 60 * 24 * 4;
 
+function isSameDay(d1, d2) {
+  return d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
+}
+
 class SBHSStore extends Emitter {
   constructor() {
     super();
@@ -79,9 +83,12 @@ class SBHSStore extends Emitter {
     this.bind('next_day', this.getNextDay)
   }
 
-  setDate = (dateString) => {
+  setDate = (d) => {
+    const dateString = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    console.log('setting date override', dateString);
     if (dateString) this._date = '&date=' + encodeURIComponent(dateString);
     else this._date = '';
+    this._fetchToday();
   };
 
   getNextDay = () => {
@@ -95,13 +102,11 @@ class SBHSStore extends Emitter {
       return d;
     }
 
+    // Only fire if the current day is correct
     let d = new Date(this.today.date);
+    if (!isSameDay(d, new Date())) return;
     d = getNextWeekday(d);
-    const dateString = d.getFullYear() + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
-    console.log(dateString);
-
-    this.setDate(dateString);
-    this._fetchToday();
+    this.setDate(d);
   };
 
   static _defaultDay(date) {
@@ -246,10 +251,14 @@ class SBHSStore extends Emitter {
         let i = {};
 
         let lastClassBell = null;
+        const classVariations = data['classVariations'];
         for (let j = data['bells'].length - 1; j >= 0; j--) {
           const b = data['bells'][j];
-          if (periods[b.bell]) {
+          const noTeacher = classVariations && classVariations[b.bell] && classVariations[b.bell]['type'] === 'nocover';
+          if (periods[b.bell] && !noTeacher) {
+            // The last bell is the bell after this one, thus increment.
             j++;
+            // Prevent setting last bell if it's the last scheduled period.
             if (j >= data['bells'].length - 1) break;
             lastClassBell = parseTime(new Date(data['date']), data['bells'][j].time);
             break

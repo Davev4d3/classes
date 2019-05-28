@@ -109,7 +109,7 @@ export class Today extends React.Component {
     if (!this.state.hasClasses || !this.state.lastClassBell) return;
     if (this._nextDayTimeout) clearTimeout(this._nextDayTimeout);
 
-    TimerDynamic(this.setNextDay, this.state.lastClassBell, 1000, false)
+    this._nextDayTimeout = TimerDynamic(this.setNextDay, this.state.lastClassBell, 1000, false);
   }
 
   setNextDay = () => {
