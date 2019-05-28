@@ -8,15 +8,22 @@ export class Expandable extends React.Component {
     this.state = {
       expanded: !!props.initiallyExpanded,
       maxHeight: 'none'
-    }
+    };
+
+    this._el = React.createRef();
   }
+
+  _setRef = e => {
+    if (e) this._el = e;
+    this.setHeight()
+  };
 
   render() {
     const {titleComponent, content, ...rest} = this.props;
 
     return <div {...rest}>
-      <div onClick={() => this.setState({expanded: !this.state.expanded})}>{titleComponent}</div>
-      <div ref={(e) => this._el = e} style={{
+      <div onClick={() => this.setState(({expanded}) => ({expanded: !expanded}))}>{titleComponent}</div>
+      <div ref={this._setRef} style={{
         'transition': 'max-height .3s ease',
         'maxHeight': this.state.maxHeight,
         'overflow': 'hidden'
@@ -26,7 +33,7 @@ export class Expandable extends React.Component {
 
   setHeight = () => {
     if (!this._el) return;
-    this.setState({maxHeight: (this.state.expanded ? ReactDOM.findDOMNode(this.refs.content).scrollHeight : 0) + 'px'})
+    this.setState({maxHeight: (this.state.expanded ? this._el.scrollHeight : 0) + 'px'})
   };
 
   componentDidMount() {

@@ -401,8 +401,6 @@ class SBHSStore extends Emitter {
 
         let data = JSON.parse(objectString);
 
-        let subjectIndex = {};
-
         let subjects = Object.keys(data['subjects'])
           .map(key => {
             let subject = data['subjects'][key];
