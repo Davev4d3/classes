@@ -1,28 +1,37 @@
-var express = require('express');
-var session = require('express-session');
-var compression = require('compression');
-var path = require('path');
-var pgSession = require('connect-pg-simple')(session);
+const express = require('express');
+const session = require('express-session');
+const compression = require('compression');
+const path = require('path');
+const pgSession = require('connect-pg-simple')(session);
 
-var PORT = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
-var IP = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+const PORT = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
+const IP = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 
-var app = express();
+const app = express();
 
 app.use(compression());
 
 app.use(session({
   store: process.env.NODE_ENV === 'production' ? new pgSession({
-    conString: process.env.DATABASE_URL
-      || process.env.OPENSHIFT_POSTGRESQL_DB_URL
+    conString: process.env.DATABASE_URL || process.env.OPENSHIFT_POSTGRESQL_DB_URL
   }) : null,
-  secret: process.env.COOKIE_SECRET, //TODO: No seriously, we need a better secret.
+  secret: process.env.COOKIE_SECRET,
   saveUninitialized: false,
   resave: false,
-  cookie: { maxAge: 90 * 24 * 60 * 60 * 1000 } // 90 Days
+  cookie: {maxAge: 90 * 24 * 60 * 60 * 1000} // 90 Days
 }));
 
-app.use(express.static( path.join(path.dirname(__dirname), 'public') ));
+app.use(express.static(path.join(path.dirname(__dirname), 'public')));
+
+function wwwRedirect(req, res, next) {
+  if (req.headers.host.slice(0, 4) === 'www.') {
+    const newHost = req.headers.host.slice(4);
+    return res.redirect(301, req.protocol + '://' + newHost + req.originalUrl);
+  }
+  next();
+}
+app.set('trust proxy', true);
+app.get('/', wwwRedirect);
 
 require('./auth')(
   app,
