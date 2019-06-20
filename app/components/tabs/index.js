@@ -1,7 +1,7 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
 import STYLE from './style.css';
-import { Popup } from '../popup/popup';
+import { Toast } from '../popup/toast';
 import { PopupManager } from '../popup/popup-manager';
 
 export default createReactClass({
@@ -11,14 +11,12 @@ export default createReactClass({
 
   render() {
     let buttons = this.props.tabs.map((tab, i) => {
-      if (!this.props.tabs[i].button) // Assume it's a divider.
-        return <li key={i} className={STYLE.divider}/>;
+      if (!this.props.tabs[i].button) return <li key={i} className={STYLE.divider}/>;
 
       return <li
         key={i}
         className={STYLE.button}
-        //TODO: Separate formatting from this module.
-        style={{'color': i == this.state.selectedIndex ? '#00BFFF' : null}}
+        style={{'color': i === this.state.selectedIndex ? '#00BFFF' : null}}
         onClick={tab.content ? () => this.setState({selectedIndex: i}) : tab.onClick}>
         {tab.button}
       </li>;
@@ -29,7 +27,7 @@ export default createReactClass({
       <ul className={STYLE.nav}/>
 
       <div className={STYLE.content}>
-
+        <Toast/>
         <PopupManager/>
 
         {this.props.tabs[this.state.selectedIndex].content}

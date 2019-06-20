@@ -1,13 +1,14 @@
 import React from 'react';
 import s from './popup.css';
 
-const EXITED_TIMEOUT = 2000;
+const EXITED_TIMEOUT = 1000;
 const TRANSITION_TIMEOUT = 500;
 
-export class Popup extends React.PureComponent {
+export class Popup extends React.Component {
 
   static defaultProps = {
     closeTimeout: 2000,
+    closeAfter: null,
     destroyOnExit: true,
     show: true
   };
@@ -49,10 +50,11 @@ export class Popup extends React.PureComponent {
       exited: false,
       show: props.show,
       easeIn: false,
-      closeVisible: !props.closeTimeout || props.closeTimeout === false ? true : false
+      closeVisible: !props._closeTimeout || props._closeTimeout === false
     };
 
-    this.closeTimeout = null;
+    this._closeTimeout = null;
+    this._closeAfterTimeout = null;
   }
 
   exited = () => {
@@ -60,6 +62,7 @@ export class Popup extends React.PureComponent {
   };
 
   close = () => {
+    if (!this.state.show) return;
     this.setState({show: false});
 
     if (this.props.onClose && typeof this.props.onClose === 'function') {
@@ -71,17 +74,19 @@ export class Popup extends React.PureComponent {
     }
   };
 
-  showClose = () => {
-    this.setState({closeVisible: true})
-  };
+  showClose = () => this.setState({closeVisible: true});
 
   componentDidMount() {
-    this.closeTimeout = setTimeout(this.showClose, this.props.closeTimeout)
+    // Display close button after some time
+    if (!this.state.closeVisible) this._closeTimeout = setTimeout(this.showClose, this.props._closeTimeout);
+    // Automatically close after some time
+    if (this.props.closeAfter) this._closeAfterTimeout = setTimeout(this.close, this.props.closeAfter);
   }
 
   componentWillUnmount() {
-    clearTimeout(this.closeTimeout)
-    clearTimeout(this._destroyTimeout)
+    clearTimeout(this._closeTimeout);
+    clearTimeout(this._destroyTimeout);
+    clearTimeout(this._closeAfterTimeout)
   }
 
   render() {
