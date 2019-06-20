@@ -2,6 +2,9 @@
 
 ## Development
 /public/app.js.map
+/public/asset-manifest.json
+/public/main.appcache
+/public/service-worker.js
 
 ### IDEs ###
 /.idea/

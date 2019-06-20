@@ -4,6 +4,9 @@ const path = require('path');
 const AppCachePlugin = require('appcache-webpack-plugin');
 const fs = require('fs');
 
+const ManifestPlugin = require('webpack-manifest-plugin');
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
+
 const PATHS = {
   DIST: path.resolve(__dirname, 'unset'),
   JS: path.resolve(__dirname, 'unset'),
@@ -16,8 +19,21 @@ const plugins = [
       'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
     },
   }),
-  // new webpack.optimize.(),
-  // new webpack.optimize.OccurenceOrderPlugin(false),
+
+  new ManifestPlugin({
+    fileName: 'asset-manifest.json',
+    apply: function (manifest) {
+      manifest.delete('main.appcache');
+    }
+  }),
+
+  new SWPrecacheWebpackPlugin({
+    dontCacheBustUrlsMatching: /\.\w{8}\./,
+    filename: 'service-worker.js',
+    minify: true,
+    navigateFallback: '/',
+    staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
+  }),
 ];
 
 module.exports = env => {
@@ -31,7 +47,7 @@ module.exports = env => {
         cache: fs.readdirSync('public/fonts')
           .filter(f => f[0] != '.')
           .map(f => 'fonts/' + f)
-          // .concat(['main.css'])
+        // .concat(['main.css'])
       })
     )
   }
