@@ -16,8 +16,16 @@ function notify(message) {
   const popup = {
     title: message,
     closeAfter: 5000,
-    closeTimeout: 1500
+    closeTimeout: 1500,
   };
 
   ToastEvents.trigger(TOAST_ACTION_QUEUE, popup)
+}
+
+if (location.hostname === 'localhost') {
+  console.log('notify')
+  notify('message1')
+  const handler = () => notify('deferred');
+  setTimeout(handler, 5000);
+  window.h = handler
 }

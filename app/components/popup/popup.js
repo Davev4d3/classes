@@ -53,6 +53,7 @@ export class Popup extends React.Component {
       closeVisible: !props._closeTimeout || props._closeTimeout === false
     };
 
+    this._showOnMount = !!props.show;
     this._closeTimeout = null;
     this._closeAfterTimeout = null;
   }

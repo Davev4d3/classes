@@ -7,10 +7,33 @@ import Emitter from '../../utilities/emitter';
 export const TOAST_ACTION_QUEUE = 'QUEUE';
 
 class ToastEmitter extends Emitter {
+  constructor() {
+    super();
+    this._deferred = [];
+  }
+
+  bind(event, fn) {
+    super.bind(event, fn);
+    // Trigger events that were queued before there were any subscribers
+    if (this._deferred.length) {
+      let i = 0;
+      while (i < this._deferred.length) {
+        const e = this._deferred[i];
+        if (e[0] === event) {
+          this._deferred.splice(i, 1);
+          this.trigger(e[0], e[1]);
+        } else i++;
+      }
+    }
+  }
+
   trigger(event, payload) {
     this._events = this._events || {};
     console.log(this._events, event, payload);
-    if (!(event in this._events)) return;
+    if (!(event in this._events)) {
+      this._deferred.push([event, payload]);
+      return
+    }
     this._events[event].forEach(fn => fn(payload));
   }
 }
@@ -66,7 +89,7 @@ export class Toast extends React.Component {
       return <Popup onClose={() => this._onClose(i)}
                     closeTimeout={v.instantClose ? false : undefined}
                     text={v.title}
-                    show={i === currentIndex || v.read}
+                    show={i === currentIndex || v.read === true}
                     showDelay={this._transitionTimeout}
                     key={i}
       />;

@@ -22,17 +22,28 @@ const plugins = [
 
   new ManifestPlugin({
     fileName: 'asset-manifest.json',
-    apply: function (manifest) {
-      manifest.delete('main.appcache');
-    }
+    filter: function (file) {
+      return file.name !== 'main.appcache'
+    },
+    seed: [
+      'index.html',
+      'roboto-light.woff',
+      'roboto-thin.woff'
+    ].reduce((obj, v) => {
+      obj[v] = v;
+      return obj;
+    }, {})
   }),
 
   new SWPrecacheWebpackPlugin({
     dontCacheBustUrlsMatching: /\.\w{8}\./,
     filename: 'service-worker.js',
     minify: true,
-    navigateFallback: '/',
+    navigateFallback: '/index.html',
     staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
+
+    mergeStaticsConfig: true,
+    staticFileGlobs: ['public/fonts/**.*', 'public/index.html']
   }),
 ];
 
@@ -47,7 +58,6 @@ module.exports = env => {
         cache: fs.readdirSync('public/fonts')
           .filter(f => f[0] != '.')
           .map(f => 'fonts/' + f)
-        // .concat(['main.css'])
       })
     )
   }
