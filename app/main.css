@@ -1,6 +1,7 @@
 :global {
 @font-face {
     font-family: 'Roboto';
+    font-display: auto;
     src: url('/fonts/roboto-thin.woff') format('woff');
     font-weight: 100;
     font-style: normal;
@@ -8,6 +9,7 @@
 
 @font-face {
     font-family: 'Roboto';
+    font-display: auto;
     src: url('/fonts/roboto-light.woff') format('woff');
     font-weight: 300;
     font-style: normal;
@@ -20,11 +22,11 @@ html, body, #app {
 }
 
 #app {
-  font-family: 'Roboto', 'Helvetica Neue', 'Segoe UI', sans-serif;
+  font-family: 'Roboto', 'Helvetica Neue', 'Arial', sans-serif;
   font-weight: 300;
   font-size: 16px;
   color: #212121;
-  background: #FFF;
+  background: #fbfbfb;
 }
 
 a {

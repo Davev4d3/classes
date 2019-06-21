@@ -33,18 +33,7 @@ const plugins = [
       obj[v] = v;
       return obj;
     }, {})
-  }),
-
-  new SWPrecacheWebpackPlugin({
-    dontCacheBustUrlsMatching: /\.\w{8}\./,
-    filename: 'service-worker.js',
-    minify: true,
-    navigateFallback: '/index.html',
-    staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/],
-
-    mergeStaticsConfig: true,
-    staticFileGlobs: ['public/fonts/**.*', 'public/index.html']
-  }),
+  })
 ];
 
 module.exports = env => {
@@ -53,11 +42,16 @@ module.exports = env => {
   const cssExtractor = isProduction ? 'style-loader' /* cssExtractorPlugin.loader */ : 'style-loader';
   if (isProduction) {
     plugins.push(
-      new AppCachePlugin({
-        output: 'main.appcache',
-        cache: fs.readdirSync('public/fonts')
-          .filter(f => f[0] != '.')
-          .map(f => 'fonts/' + f)
+      new SWPrecacheWebpackPlugin({
+        dontCacheBustUrlsMatching: /\.\w{8}\./,
+        filename: 'service-worker.js',
+        minify: true,
+        navigateFallback: 'public/index.html',
+        staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/, /main\.appcache$/],
+
+        mergeStaticsConfig: true,
+        stripPrefix: 'public',
+        staticFileGlobs: ['public/fonts/**.*', 'public/index.html']
       })
     )
   }

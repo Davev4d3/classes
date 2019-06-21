@@ -1,7 +1,6 @@
 import React from 'react';
 import { Popup } from './popup';
 import SBHSStore from '../../stores/sbhs';
-import { PopupManager } from './popup-manager';
 import Emitter from '../../utilities/emitter';
 
 export const TOAST_ACTION_QUEUE = 'QUEUE';
@@ -34,7 +33,7 @@ class ToastEmitter extends Emitter {
       return
     }
     let r;
-    for (const handler of this._events[event]){
+    for (const handler of this._events[event]) {
       r = handler(payload)
     }
     if (cb) cb(r);
@@ -67,7 +66,7 @@ export class Toast extends React.Component {
   };
 
   _onClose = (i) => {
-    console.log('closing', i, this.state)
+    if (this.state.popups[i].read) return;
     this.setState(({popups, currentIndex}) => {
       popups[i].read = true;
       currentIndex += 1;
@@ -92,11 +91,12 @@ export class Toast extends React.Component {
     let popupElements;
     if (popups && popups.length) popupElements = popups.map((v, i) => {
       return <Popup onClose={() => this._onClose(i)}
-                    closeTimeout={v.instantClose ? false : undefined}
+                    closeTimeout={v.closeTimeout ? v.closeTimeout : (v.instantClose ? false : undefined)}
                     text={v.title}
                     show={v.read === true ? false : i === currentIndex}
                     showDelay={this._transitionTimeout}
                     key={i}
+                    closeAfter={v.closeAfter}
       />;
     });
     else popupElements = null;

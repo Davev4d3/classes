@@ -35,7 +35,6 @@ export class Popup extends React.Component {
       }
     }
 
-    console.log(state, this.state)
     this.setState(state);
   }
 
@@ -60,7 +59,7 @@ export class Popup extends React.Component {
       show: false,
       easeIn: props.animateOnMount,
       exited: false,
-      closeVisible: !props._closeTimeout || props._closeTimeout === false
+      closeVisible: !props.closeTimeout || props.closeTimeout === false
     };
 
     this._closeTimeout = null;
@@ -87,7 +86,10 @@ export class Popup extends React.Component {
 
   componentDidMount() {
     // Display close button after some time
-    if (!this.state.closeVisible) this._closeTimeout = setTimeout(this.showClose, this.props._closeTimeout);
+    if (!this.state.closeVisible) {
+      this._closeTimeout = setTimeout(this.showClose,
+            this.props.showDelay ? this.props.showDelay + this.props.closeTimeout : this.props.closeTimeout);
+    }
     // Automatically close after some time
     if (this.props.closeAfter) this._closeAfterTimeout = setTimeout(this.close, this.props.closeAfter);
     if (this.props.animateOnMount) this.handleShow();
