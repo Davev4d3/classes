@@ -1,13 +1,25 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import createReactClass from 'create-react-class';
-
 import Centered from '../centered';
 import Toggle from '../toggle';
-
 import SettingsStore from '../../stores/settings';
+import s from './style.css';
 
-import STYLE from './style.css';
-import { ThemeProvider, ThemeStatus } from '../themes';
+import { ThemeContext, ThemeProvider, THEMES, ThemeToggleExample } from '../themes';
+
+const DarkThemeToggle = props => {
+  const themeState = useContext(ThemeContext);
+
+  return (
+    <div className={s.row}>
+      <div className={s.inner__left}>Dark Theme</div>
+      <div className={s.inner__right}>
+        <Toggle enabled={themeState.theme === THEMES.DARK}
+                onChange={(newState) => SettingsStore.update({expandNotices: newState})}/>
+      </div>
+    </div>
+  )
+};
 
 export default createReactClass({
   getInitialState() {
@@ -45,57 +57,74 @@ export default createReactClass({
 
   render() {
     return <Centered vertical horizontal>
-      <div className={STYLE.settings}>
-        <ThemeStatus/>
+      <div className={s.settings}>
 
-        <div className={STYLE.labels}>
-          <div>Classes</div>
-          <div>Expand Notices</div>
-          <div title={'If you have a free period, this will load tomorrow\'s timetable'}>Load Next Day</div>
-          <div>Show Breaks</div>
-          <div>Show Assessments</div>
-          <div>Notices Filter</div>
-          <div>Content Settings</div>
-        </div>
+        <ThemeProvider>
+          <ThemeToggleExample/>
+        </ThemeProvider>
 
-        <div className={STYLE.controls}>
-          <div style={{'width': '90px', 'height': '48px'}}>
+        <div className={s.rowContainer}>
+          <div className={s.row}>
+            <div className={s.inner__left}>Classes</div>
+            <div className={s.inner__right}/>
           </div>
 
-          <div>
-            <Toggle enabled={this.state.expandNotices} onChange={(newState) => SettingsStore.update({ expandNotices: newState })} />
+          <div className={s.row}>
+            <div className={s.inner__left}>Expand Notices</div>
+            <div className={s.inner__right}>
+              <Toggle enabled={this.state.expandNotices}
+                      onChange={(newState) => SettingsStore.update({expandNotices: newState})}/>
+            </div>
           </div>
 
-          <div>
-            <Toggle enabled={this.state.loadNextDay} onChange={(newState) => SettingsStore.update({ loadNextDay: newState })} />
+          <div className={s.row}>
+            <div className={s.inner__left}>Load Next Day</div>
+            <div className={s.inner__right}>
+              <Toggle enabled={this.state.loadNextDay}
+                      onChange={(newState) => SettingsStore.update({loadNextDay: newState})}/>
+            </div>
           </div>
 
-          <div>
-            <Toggle enabled={this.state.showBreaks} onChange={(newState) => SettingsStore.update({ showBreaks: newState })} />
+          <div className={s.row}>
+            <div className={s.inner__left}>Show Breaks</div>
+            <div className={s.inner__right}>
+              <Toggle enabled={this.state.showBreaks}
+                      onChange={(newState) => SettingsStore.update({showBreaks: newState})}/>
+            </div>
           </div>
 
-          <div>
-            <Toggle enabled={this.state.showAssessments} onChange={(newState) => SettingsStore.update({ showAssessments: newState })} />
+          <div className={s.row}>
+            <div className={s.inner__left}>Show Assessments</div>
+            <div className={s.inner__right}>
+              <Toggle enabled={this.state.showAssessments}
+                      onChange={(newState) => SettingsStore.update({showAssessments: newState})}/>
+            </div>
           </div>
 
-          <div>
-            <select
-              onChange={e => SettingsStore.update({ noticesFilter: e.target.value || null })}
-              value={this.state.noticesFilter}
-              className={STYLE.select}>
-              <option value=''>All Years</option>
-              <option value='7'>Year 7</option>
-              <option value='8'>Year 8</option>
-              <option value='9'>Year 9</option>
-              <option value='10'>Year 10</option>
-              <option value='11'>Year 11</option>
-              <option value='12'>Year 12</option>
-              <option value='Staff'>Staff</option>
-            </select>
+          <div className={s.row}>
+            <div className={s.inner__left}>Notices Filter</div>
+            <div className={s.inner__right}>
+              <select
+                onChange={e => SettingsStore.update({noticesFilter: e.target.value || null})}
+                value={this.state.noticesFilter}
+                className={s.select}>
+                <option value=''>All Years</option>
+                <option value='7'>Year 7</option>
+                <option value='8'>Year 8</option>
+                <option value='9'>Year 9</option>
+                <option value='10'>Year 10</option>
+                <option value='11'>Year 11</option>
+                <option value='12'>Year 12</option>
+                <option value='Staff'>Staff</option>
+              </select>
+            </div>
           </div>
 
-          <div>
-            <button className={STYLE.dangerButton} onClick={this.clearAllData}>Clear All Data</button>
+          <div className={s.row}>
+            <div className={s.inner__left}>Content Settings</div>
+            <div className={s.inner__right}>
+              <button className={s.dangerButton} onClick={this.clearAllData}>Clear All Data</button>
+            </div>
           </div>
         </div>
       </div>

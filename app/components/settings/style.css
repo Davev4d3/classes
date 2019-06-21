@@ -1,48 +1,45 @@
-.settings {
+.row {
   display: flex;
+  min-height: 48px;
+  width: 100%;
 }
 
-.controls > *, .labels > * {
-  height: 48px;
+.rowContainer {
+  width: 100%;
+}
+
+.inner__left, .inner__right {
   display: flex;
   align-items: center;
+  width: 50%;
+  flex: 1 1 auto;
 }
 
-.labels > * {
+.inner__left {
   justify-content: flex-end;
-  margin-right: 16px;
+  padding-right: .5em;
+}
+
+.inner__right {
+  padding-left: .5em;
+}
+
+.settings {
+  width: 100%;
 }
 
 .select {
   appearance: none;
   padding: 0 8px;
   height: 36px;
-  border: 1px solid #CCC;
+  border: 1px solid #ccc;
   border-radius: 4px;
   outline: none;
   width: 144px;
-  background: #FFF svg-load(arrow.svg) no-repeat right 8px center / 10px;
+  background: #fff svg-load(arrow.svg) no-repeat right 8px center / 10px;
   font: inherit;
 }
 
 .select > option {
   font-size: 1rem;
-}
-
-.danger-button {
-  background-color: #ED5565;
-  color: #FFF;
-  display: inline-block;
-  padding: 0 12px;
-  height: 36px;
-  border-radius: 4px;
-  border: 0;
-  font: inherit;
-  cursor: pointer;
-  user-select: none;
-  appearance: none;
-}
-
-.danger-button:active {
-  background-color: #EC4758;
 }

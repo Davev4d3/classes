@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
-const THEMES = {
+export const THEMES = {
   DARK: 'DARK',
   LIGHT: 'LIGHT'
 };
 
-function getInitialTheme() {
-  const d = localStorage.getItem('theme');
-  return d ? JSON.parse(d) : {theme: THEMES.LIGHT}
-}
+export const ThemeContext = React.createContext();
+export const ThemeSetContext = React.createContext();
 
 function getPreferredTheme() {
+
+  function getInitialTheme() {
+    const d = localStorage.getItem('theme');
+    return d ? JSON.parse(d) : {theme: THEMES.LIGHT}
+  }
+
   if (!window.matchMedia) return;
 
   const preferDarkQuery = '(prefers-color-scheme: dark)';
@@ -31,22 +35,10 @@ function getPreferredTheme() {
   }
 }
 
-function initialise() {
-
-
-}
-
-export function ThemeStatus(props) {
-  const {theme, queryEvents} = getPreferredTheme();
-  const [themeState, setThemeState] = useState(theme);
-
-  queryEvents.addEventListener(({matches}) => {
-    setThemeState(matches ? THEMES.DARK : THEMES.LIGHT)
-  });
-
-  useEffect(() => {
-    localStorage.setItem('theme', JSON.stringify(themeState))
-  }, [themeState]);
+export function ThemeToggleExample(props) {
+  const themeState = useTheme();
+  const setThemeState = useThemeSetState();
+  console.log(themeState, setThemeState);
 
   return (
     <div style={themeState.theme === THEMES.DARK ? {
@@ -59,21 +51,32 @@ export function ThemeStatus(props) {
         if (theme === THEMES.DARK) theme = THEMES.LIGHT;
         else theme = THEMES.DARK;
         return {theme}
-      })}>toggle</button>
+      })}>toggle
+      </button>
     </div>
   )
 }
 
-const toggleTheme = () => {
-  const mode = themeState.theme === THEMES.LIGHT ? THEMES.DARK : THEMES.LIGHT;
-  setThemeState({theme: mode});
-};
+export const useTheme = () => useContext(ThemeContext);
+export const useThemeSetState = () => useContext(ThemeSetContext);
 
 export function ThemeProvider(props) {
+  const {theme, queryEvents} = getPreferredTheme();
+  const [initialThemeState, setThemeState] = useState(theme);
+
+  queryEvents.addEventListener(({matches}) => {
+    setThemeState(matches ? THEMES.DARK : THEMES.LIGHT)
+  });
+
+  useEffect(() => {
+    localStorage.setItem('theme', JSON.stringify(initialThemeState))
+  }, [initialThemeState]);
+
   return (
-    <ThemeContext.Provider value={themeState}>
-      {themeState.theme}
-      <button onClick={toggleTheme}/>
-    </ThemeContext.Provider>
+    <ThemeSetContext.Provider value={setThemeState}>
+      <ThemeContext.Provider value={initialThemeState}>
+        {props.children}
+      </ThemeContext.Provider>
+    </ThemeSetContext.Provider>
   )
 }
