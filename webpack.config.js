@@ -51,7 +51,7 @@ module.exports = env => {
 
         mergeStaticsConfig: true,
         stripPrefix: 'public',
-        staticFileGlobs: ['public/fonts/**.*', 'public/index.html']
+        staticFileGlobs: ['public/fonts/**.*', 'public/index.html', 'public/icons/favicon.ico']
       })
     )
   }
