@@ -36,8 +36,14 @@ function getPreferredTheme() {
   const mql = window.matchMedia(preferDarkQuery);
 
   const queryEvents = {
-    addEventListener: (handler) => mql.addEventListener('change', handler),
-    removeEventListener: (handler) => mql.removeEventListener('change', handler),
+    addEventListener: (handler) => {
+      if (mql.addEventListener) mql.addEventListener('change', handler);
+      else if (mql.addListener) mql.addListener(handler);
+    },
+    removeEventListener: (handler) => {
+      if (mql.removeEventListener) mql.removeEventListener('change', handler);
+      else if (mql.removeListener) mql.removeListener(handler);
+    },
   };
 
   const isColorSchemeQuerySupported = mql.media === preferDarkQuery;
