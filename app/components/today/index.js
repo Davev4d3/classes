@@ -8,6 +8,7 @@ import STYLE from './style.css';
 import SettingsStore from '../../stores/settings';
 import { Assessments } from '../assessments/assessments';
 import { TimerDynamic } from '../../utilities/timer';
+import { THEME_COLORS, ThemeContext, THEMES } from '../themes';
 
 const VARIATION_COLOR = '#00BFFF';
 
@@ -34,6 +35,8 @@ function filterClasses(bells) {
 }
 
 export class Today extends React.Component {
+  static contextType = ThemeContext;
+
   constructor(props) {
     super(props);
 
@@ -144,6 +147,8 @@ export class Today extends React.Component {
     let {periods, nextBell, nextTime} = this.state,
       simple = !periods.some(e => e.room || e.isAssessment);
 
+    const accentColor = (this.context && this.context.details) ? this.context.details.accent : THEME_COLORS[THEMES.LIGHT].accent;
+
     return <Centered vertical horizontal>
       {nextBell ? <div className={STYLE.next}>
         <span style={{'fontSize': '1.5em'}}>{nextBell.title}</span> in
@@ -160,7 +165,7 @@ export class Today extends React.Component {
               <div style={{
                 'flexGrow': '1',
                 'fontSize': '1.5em',
-                'color': bell.variations.indexOf('title') < 0 ? '#757575' : VARIATION_COLOR
+                'color': bell.variations.indexOf('title') < 0 ? accentColor : VARIATION_COLOR
               }}>
                 {bell.title}
               </div>
@@ -177,7 +182,7 @@ export class Today extends React.Component {
             return <div
               key={i}
               className={STYLE.period}
-              style={bell.isAssessment ? null : {'color': '#757575'}}>
+              style={bell.isAssessment ? null : {'color': accentColor}}>
               <div style={{
                 'flexGrow': '1',
                 'fontSize': '1.2em',
@@ -210,7 +215,7 @@ export class Today extends React.Component {
                   </span>
                 </span>
                 {' '}
-                <span style={{'color': '#757575'}}>
+                <span style={{'color': accentColor}}>
                   {'with '}
                   <span style={{'color': bell.variations.indexOf('teacher') < 0 ? null : VARIATION_COLOR}}>
                     {bell.teacher || 'no one'}

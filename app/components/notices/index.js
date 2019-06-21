@@ -1,5 +1,4 @@
 import React from 'react';
-import createReactClass from 'create-react-class';
 import SBHSStore from '../../stores/sbhs';
 import SettingsStore from '../../stores/settings';
 import SBHSException from '../sbhs-exception';
@@ -8,45 +7,50 @@ import Loader from '../loader';
 import { Expandable } from '../expandable';
 import { DAYS } from '../../data/day-constants';
 import s from './style.css';
+import { THEME_COLORS, ThemeContext, THEMES } from '../themes';
 
-export default createReactClass({
-  getInitialState() {
-    return {
+export class Notices extends React.Component {
+  static contextType = ThemeContext;
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
       notices: null,
       date: null,
 
       initiallyExpanded: SettingsStore.expandNotices,
       filter: SettingsStore.noticesFilter
     };
-  },
+  }
 
-  getData() {
+  getData = () => {
     if (SBHSStore.notices) {
       this.setState({
         date: SBHSStore.notices.date,
         notices: SBHSStore.notices.notices
       });
     }
-  },
+  };
 
-  getSettings() {
+  getSettings = () => {
     this.setState({
       initiallyExpanded: SettingsStore.expandNotices,
       filter: SettingsStore.noticesFilter
     });
-  },
+  };
 
   componentWillMount() {
     SBHSStore.bind('notices', this.getData);
     this.getData();
 
     SettingsStore.bind('update', this.getSettings);
-  },
+  }
 
   componentWillUnmount() {
     SBHSStore.unbind('notices', this.getData);
     SettingsStore.unbind('update', this.getSettings);
-  },
+  }
 
   render() {
     if (!this.state.notices) return <Centered vertical horizontal>
@@ -63,13 +67,15 @@ export default createReactClass({
       No notices.
     </Centered>;
 
+    const accentColor = (this.context && this.context.details) ? this.context.details.accent : THEME_COLORS[THEMES.LIGHT].accent;
+
     return <Centered horizontal>
       <div className={s.notices}>
         {notices.map((notice, i) => {
           let meeting;
           if (notice.meeting) {
             let meetingDate = new Date(notice.meeting.date);
-            meeting = <span style={{'color': '#757575'}}>
+            meeting = <span style={{'color': accentColor}}>
               {` on ${DAYS[meetingDate.getDay()]} ${meetingDate.getDate()}` + (notice.meeting.time ? ', ' + notice.meeting.time : '')}
             </span>;
           } else {
@@ -82,7 +88,7 @@ export default createReactClass({
             title={notice.title}
             titleComponent={<div className={s.title}>
               <div className={s.titleInner}><span>{notice.title}</span>{meeting}</div>
-              <div className={s.author}>{notice.author} | {notice.target}</div>
+              <div className={s.author} style={{color: accentColor}}>{notice.author} | {notice.target}</div>
             </div>}
             content={<div dangerouslySetInnerHTML={{__html: notice.content}}/>}
             initiallyExpanded={this.state.initiallyExpanded}/>
@@ -90,4 +96,4 @@ export default createReactClass({
       </div>
     </Centered>;
   }
-});
+}

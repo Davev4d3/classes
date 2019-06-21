@@ -16,9 +16,12 @@
 }
 
 html, body, #app {
-  height: 100%;
   width: 100%;
   margin: 0;
+}
+
+html, body {
+  height: 100%;
 }
 
 #app {
@@ -27,6 +30,10 @@ html, body, #app {
   font-size: 16px;
   color: #212121;
   background: #fbfbfb;
+  min-height: 100%;
+  position: absolute;
+  height: 100%;
+  width: 100%;
 }
 
 a {

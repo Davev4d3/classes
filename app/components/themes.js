@@ -5,6 +5,21 @@ export const THEMES = {
   LIGHT: 'LIGHT'
 };
 
+export const THEME_COLORS = {
+  [THEMES.LIGHT]: {
+    primary: '#00bfff',
+    accent: '#757575'
+  },
+  [THEMES.DARK]: {
+    background: '#222',
+    color: '#fafafa',
+    primary: '#00bfff',
+    accent: '#bbb',
+  },
+};
+
+const THEME_STORAGE_FILTER = ['theme'];
+
 export const ThemeContext = React.createContext();
 export const ThemeSetContext = React.createContext();
 
@@ -38,8 +53,6 @@ function getPreferredTheme() {
 export function ThemeToggleExample(props) {
   const themeState = useTheme();
   const setThemeState = useThemeSetState();
-  console.log(themeState, setThemeState);
-
   return (
     <div style={themeState.theme === THEMES.DARK ? {
       background: '#222',
@@ -60,6 +73,11 @@ export function ThemeToggleExample(props) {
 export const useTheme = () => useContext(ThemeContext);
 export const useThemeSetState = () => useContext(ThemeSetContext);
 
+export function ThemeGetDetails(themeName) {
+  const details = THEME_COLORS[themeName];
+  if (details) return details;
+}
+
 export function ThemeProvider(props) {
   const {theme, queryEvents} = getPreferredTheme();
   const [initialThemeState, setThemeState] = useState(theme);
@@ -69,8 +87,19 @@ export function ThemeProvider(props) {
   });
 
   useEffect(() => {
-    localStorage.setItem('theme', JSON.stringify(initialThemeState))
-  }, [initialThemeState]);
+    const filtered = Object.keys(initialThemeState)
+      .filter(key => THEME_STORAGE_FILTER.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = initialThemeState[key];
+        return obj;
+      }, {});
+    localStorage.setItem('theme', JSON.stringify(filtered))
+  }, [initialThemeState.theme]);
+
+  useEffect(() => {
+    const themeDetails = ThemeGetDetails(initialThemeState.theme);
+    setThemeState(prevState => ({...prevState, details: themeDetails}));
+  }, [initialThemeState.theme]);
 
   return (
     <ThemeSetContext.Provider value={setThemeState}>

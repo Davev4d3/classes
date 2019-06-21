@@ -1,21 +1,22 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import createReactClass from 'create-react-class';
 import Centered from '../centered';
 import Toggle from '../toggle';
 import SettingsStore from '../../stores/settings';
 import s from './style.css';
 
-import { ThemeContext, ThemeProvider, THEMES, ThemeToggleExample } from '../themes';
+import { THEMES, ThemeToggleExample, useTheme, useThemeSetState } from '../themes';
 
 const DarkThemeToggle = props => {
-  const themeState = useContext(ThemeContext);
+  const themeState = useTheme();
+  const themeSetState = useThemeSetState();
 
   return (
     <div className={s.row}>
       <div className={s.inner__left}>Dark Theme</div>
       <div className={s.inner__right}>
         <Toggle enabled={themeState.theme === THEMES.DARK}
-                onChange={(newState) => SettingsStore.update({expandNotices: newState})}/>
+                onChange={(newState) => themeSetState({theme: newState ? THEMES.DARK : THEMES.LIGHT})}/>
       </div>
     </div>
   )
@@ -58,16 +59,13 @@ export default createReactClass({
   render() {
     return <Centered vertical horizontal>
       <div className={s.settings}>
-
-        <ThemeProvider>
-          <ThemeToggleExample/>
-        </ThemeProvider>
-
         <div className={s.rowContainer}>
           <div className={s.row}>
             <div className={s.inner__left}>Classes</div>
             <div className={s.inner__right}/>
           </div>
+
+          <DarkThemeToggle/>
 
           <div className={s.row}>
             <div className={s.inner__left}>Expand Notices</div>
@@ -123,7 +121,7 @@ export default createReactClass({
           <div className={s.row}>
             <div className={s.inner__left}>Content Settings</div>
             <div className={s.inner__right}>
-              <button className={s.dangerButton} onClick={this.clearAllData}>Clear All Data</button>
+              <button onClick={this.clearAllData}>Clear All Data</button>
             </div>
           </div>
         </div>

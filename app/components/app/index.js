@@ -2,10 +2,10 @@ import React from 'react';
 
 import { Today } from '../today';
 import Timetable from '../timetable';
-import Notices from '../notices';
+import { Notices } from '../notices';
 import Settings from '../settings';
 
-import Tabs from '../tabs';
+import { Tabs } from '../tabs';
 import Icon from '../icon';
 import Loader from '../loader';
 
@@ -14,6 +14,7 @@ import NetworkStore from '../../stores/network';
 
 import STYLE from './style.css';
 import createReactClass from 'create-react-class';
+import { ThemeProvider } from '../themes';
 
 function button(icon, tooltip) {
   return <div className={STYLE.item + ' ' + STYLE.button} title={tooltip}>
@@ -91,6 +92,10 @@ export default createReactClass({
       }
     }
 
-    return <Tabs tabs={tabs}/>;
+    return (
+      <ThemeProvider>
+        <Tabs tabs={tabs}/>
+      </ThemeProvider>
+    )
   }
 });
