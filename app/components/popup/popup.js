@@ -10,26 +10,36 @@ export class Popup extends React.Component {
     closeTimeout: 2000,
     closeAfter: null,
     destroyOnExit: true,
-    show: true
+    show: true,
+    animateOnMount: true
   };
 
   componentDidUpdate(prevProps) {
     if (this.props.show !== prevProps.show) {
-      const state = {
-        show: this.props.show,
-        easeIn: this.props.show === true
-      };
-
-      if (this.props.show === true && this.props.showDelay) {
-        state.show = false;
-        setTimeout(() => this.delayedShow(true), this.props.showDelay)
-      }
-
-      this.setState(state);
+      this.handleShow()
     }
   }
 
-  delayedShow = (resetEasing) => {
+  handleShow() {
+    const state = {
+      show: this.props.show,
+      easeIn: !!this.props.show
+    };
+
+    if (this.props.show) {
+      if (this.props.showDelay) {
+        state.show = false;
+        setTimeout(() => this.show(true), this.props.showDelay)
+      } else {
+
+      }
+    }
+
+    console.log(state, this.state)
+    this.setState(state);
+  }
+
+  show = (resetEasing) => {
     if (this.props.show) {
       this.setState({show: true}, resetEasing ? () => {
         setTimeout(this.resetEasing, TRANSITION_TIMEOUT)
@@ -47,13 +57,12 @@ export class Popup extends React.Component {
     super(props);
 
     this.state = {
+      show: false,
+      easeIn: props.animateOnMount,
       exited: false,
-      show: props.show,
-      easeIn: false,
       closeVisible: !props._closeTimeout || props._closeTimeout === false
     };
 
-    this._showOnMount = !!props.show;
     this._closeTimeout = null;
     this._closeAfterTimeout = null;
   }
@@ -63,8 +72,7 @@ export class Popup extends React.Component {
   };
 
   close = () => {
-    if (!this.state.show) return;
-    this.setState({show: false});
+    if (!this.props.show) return;
 
     if (this.props.onClose && typeof this.props.onClose === 'function') {
       this.props.onClose()
@@ -82,6 +90,7 @@ export class Popup extends React.Component {
     if (!this.state.closeVisible) this._closeTimeout = setTimeout(this.showClose, this.props._closeTimeout);
     // Automatically close after some time
     if (this.props.closeAfter) this._closeAfterTimeout = setTimeout(this.close, this.props.closeAfter);
+    if (this.props.animateOnMount) this.handleShow();
   }
 
   componentWillUnmount() {

@@ -12,6 +12,8 @@ export const ServiceWorkerNotify = {
   [SERVICE_WORKER_STATES.INSTALLED]: () => notify('Update complete. ' + APP_NAME + ' is now cached for offline use.')
 };
 
+let closeLastPopup = null;
+
 function notify(message) {
   const popup = {
     title: message,
@@ -19,7 +21,10 @@ function notify(message) {
     closeTimeout: 1500,
   };
 
-  ToastEvents.trigger(TOAST_ACTION_QUEUE, popup)
+  if (closeLastPopup) closeLastPopup();
+  closeLastPopup = ToastEvents.trigger(TOAST_ACTION_QUEUE, popup, c => {
+    closeLastPopup = c
+  })
 }
 
 if (location.hostname === 'localhost') {

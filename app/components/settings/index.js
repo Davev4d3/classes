@@ -7,6 +7,7 @@ import Toggle from '../toggle';
 import SettingsStore from '../../stores/settings';
 
 import STYLE from './style.css';
+import { ThemeProvider } from '../themes';
 
 export default createReactClass({
   getInitialState() {
@@ -45,6 +46,8 @@ export default createReactClass({
   render() {
     return <Centered vertical horizontal>
       <div className={STYLE.settings}>
+        <ThemeProvider/>
+
         <div className={STYLE.labels}>
           <div>Classes</div>
           <div>Expand Notices</div>

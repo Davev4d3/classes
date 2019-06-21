@@ -21,20 +21,23 @@ class ToastEmitter extends Emitter {
         const e = this._deferred[i];
         if (e[0] === event) {
           this._deferred.splice(i, 1);
-          this.trigger(e[0], e[1]);
+          this.trigger(e[0], e[1], e[2] ? e[2] : undefined);
         } else i++;
       }
     }
   }
 
-  trigger(event, payload) {
+  trigger(event, payload, cb) {
     this._events = this._events || {};
-    console.log(this._events, event, payload);
     if (!(event in this._events)) {
-      this._deferred.push([event, payload]);
+      this._deferred.push([event, payload, cb]);
       return
     }
-    this._events[event].forEach(fn => fn(payload));
+    let r;
+    for (const handler of this._events[event]){
+      r = handler(payload)
+    }
+    if (cb) cb(r);
   }
 }
 
@@ -53,16 +56,18 @@ export class Toast extends React.Component {
   }
 
   queue = popup => {
-    console.log('queueing', popup);
     if (popup.title) {
+      const close = () => this._onClose(this.state.popups.indexOf(popup));
       this.setState(({popups}) => {
         popups.push(popup);
         return {popups}
-      })
+      });
+      return close;
     }
   };
 
   _onClose = (i) => {
+    console.log('closing', i, this.state)
     this.setState(({popups, currentIndex}) => {
       popups[i].read = true;
       currentIndex += 1;
@@ -89,7 +94,7 @@ export class Toast extends React.Component {
       return <Popup onClose={() => this._onClose(i)}
                     closeTimeout={v.instantClose ? false : undefined}
                     text={v.title}
-                    show={i === currentIndex || v.read === true}
+                    show={v.read === true ? false : i === currentIndex}
                     showDelay={this._transitionTimeout}
                     key={i}
       />;
