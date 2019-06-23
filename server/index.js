@@ -23,15 +23,16 @@ app.use(session({
 
 app.use(express.static(path.join(path.dirname(__dirname), 'public')));
 
+// Redirect all www requests to non-www
 function wwwRedirect(req, res, next) {
   if (req.headers.host.slice(0, 4) === 'www.') {
-    const newHost = req.headers.host.slice(4);
-    return res.redirect(301, req.protocol + '://' + newHost + req.originalUrl);
+    return res.redirect(301, req.protocol + '://' + req.headers.host.slice(4) + req.originalUrl);
   }
   next();
 }
+
 app.set('trust proxy', true);
-app.get('/', wwwRedirect);
+app.use(wwwRedirect);
 
 require('./auth')(
   app,
