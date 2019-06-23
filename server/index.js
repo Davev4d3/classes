@@ -21,8 +21,6 @@ app.use(session({
   cookie: {maxAge: 90 * 24 * 60 * 60 * 1000} // 90 Days
 }));
 
-app.use(express.static(path.join(path.dirname(__dirname), 'public')));
-
 // Redirect all www requests to non-www
 function wwwRedirect(req, res, next) {
   if (req.headers.host.slice(0, 4) === 'www.') {
@@ -33,6 +31,8 @@ function wwwRedirect(req, res, next) {
 
 app.set('trust proxy', true);
 app.use(wwwRedirect);
+
+app.use(express.static(path.join(path.dirname(__dirname), 'public')));
 
 require('./auth')(
   app,
