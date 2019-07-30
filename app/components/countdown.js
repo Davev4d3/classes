@@ -1,5 +1,4 @@
 import React from 'react';
-import createReactClass from 'create-react-class';
 
 export class Countdown extends React.Component {
   constructor(props) {
@@ -53,6 +52,7 @@ export class Countdown extends React.Component {
   }
 
   render() {
-    return <div {...this.props}>{this.state.text}</div>;
+    const {to, onComplete, ...other} = this.props;
+    return <div {...other}>{this.state.text}</div>;
   }
 }
