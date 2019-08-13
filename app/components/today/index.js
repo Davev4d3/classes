@@ -128,7 +128,7 @@ export class Today extends React.Component {
   }
 
   onCalendarFetch = () => {
-    this.getAssessments()
+    this.getNext();
   };
 
   componentWillMount() {

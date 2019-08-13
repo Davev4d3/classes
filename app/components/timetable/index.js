@@ -12,10 +12,10 @@ import { Assessments } from '../assessments/assessments';
 
 import STYLE from './style.css';
 
-import {WEEKDAYS, WEEKS} from '../../data/day-constants';
+import { WEEKDAYS, WEEKS } from '../../data/day-constants';
 
 const LOGIN_MESSAGE = <span>
-  <a onClick={() => window.location.href='/auth/login'}>Login</a> to load your timetable!
+  <a onClick={() => window.location.href = '/auth/login'}>Login</a> to load your timetable!
 </span>;
 
 export default createReactClass({
@@ -53,9 +53,9 @@ export default createReactClass({
     if (!this.state.days)
       return <Centered vertical horizontal>
         <SBHSException
-          loading={<Loader />}
+          loading={<Loader/>}
           loggedOut={LOGIN_MESSAGE}
-          offline='Go online to load your timetable!' />
+          offline='Go online to load your timetable!'/>
       </Centered>;
 
     let day = this.state.weekday + ' ' + this.state.week, periods;
@@ -81,8 +81,8 @@ export default createReactClass({
             <div
               key={i}
               className={STYLE.control}
-              style={{ 'color': this.state.weekday == weekday? '#00BFFF' :null }}
-              onClick={() => this.setState({ weekday: weekday })}>
+              style={{'color': this.state.weekday == weekday ? '#00BFFF' : null}}
+              onClick={() => this.setState({weekday: weekday})}>
               {weekday[0]}
             </div>)}
         </div>
@@ -91,21 +91,30 @@ export default createReactClass({
             <div
               key={i}
               className={STYLE.control}
-              style={{ 'color': this.state.week == week? '#00BFFF' :null }}
-              onClick={() => this.setState({ week: week })}>
+              style={{'color': this.state.week == week ? '#00BFFF' : null}}
+              onClick={() => this.setState({week: week})}>
               {week}
             </div>)}
         </div>
       </div>
 
-      {periods? <div className={STYLE.timetable}>
+      {periods ? <div className={STYLE.timetable}>
         {periods.map((period, i) => {
           return <div key={i} className={STYLE.period}>
-            <div style={{ 'fontSize': '1.2em', 'color': period.title? null : '#AAA' }}>{ period.title || 'Free Period' }</div>
-            <div style={{ 'fontSize': '1.5em' }}>{ period.room  || '' }</div>
+            <div style={{'fontSize': '1.2em', 'color': period.title ? null : '#AAA'}}>
+              {period.title || 'Free Period'}
+
+              {period.isAssessment ? (
+                <div style={{'fontSize': '.8em', 'color': '#AAA', paddingTop: '.2em'}}>
+                  {period.time ? period.time : null}{period.toRaw ? (period.time ? ' - ' : '') + period.toRaw : null}
+                </div>
+              ) : null}
+            </div>
+
+            <div style={{'fontSize': '1.5em'}}>{period.room || ''}</div>
           </div>;
         })}
-      </div> :null}
+      </div> : null}
     </Centered>;
   }
 });

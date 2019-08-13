@@ -49,6 +49,7 @@ class AssessmentManager {
   }
 
   fetchDay(dayNumber) {
+    dayNumber = typeof dayNumber === 'number' ? dayNumber.toString() : dayNumber;
     const data = this.data;
     if (data) return findByKeyNested(data, 'info', 'dayNumber', dayNumber);
   }
@@ -89,7 +90,13 @@ class AssessmentManager {
 
     const today = this.fetchDay(dayNumber);
     if (today && today.items && today.items.length) {
-      periods = today.items.concat(periods);
+      const formattedItems = this.constructor.normaliseItem(today.items, new Date()).map(x => ({
+        ...x,
+        // room: x.time
+      }));
+
+      periods = formattedItems.concat(periods);
+      console.log(formattedItems)
     }
 
     return periods;
