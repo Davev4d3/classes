@@ -29,7 +29,11 @@ export class Popup extends React.Component {
     if (this.props.show) {
       if (this.props.showDelay) {
         state.show = false;
-        setTimeout(() => this.show(true), this.props.showDelay)
+        setTimeout(() => {
+          this.show(true);
+          this.setCloseAfterTimeout();
+          if (this.props.setInitialToastDisplayed) this.props.setInitialToastDisplayed();
+        }, this.props.showDelay)
       } else {
 
       }
@@ -73,6 +77,8 @@ export class Popup extends React.Component {
   close = () => {
     if (!this.props.show) return;
 
+    clearTimeout(this._closeAfterTimeout);
+
     if (this.props.onClose && typeof this.props.onClose === 'function') {
       this.props.onClose()
     }
@@ -91,8 +97,15 @@ export class Popup extends React.Component {
             this.props.showDelay ? this.props.showDelay + this.props.closeTimeout : this.props.closeTimeout);
     }
     // Automatically close after some time
-    if (this.props.closeAfter) this._closeAfterTimeout = setTimeout(this.close, this.props.closeAfter);
     if (this.props.animateOnMount) this.handleShow();
+    else if (this.props.closeAfter) this.setCloseAfterTimeout();
+  }
+
+  setCloseAfterTimeout(){
+    if (this.props.closeAfter) this._closeAfterTimeout = setTimeout(() => {
+      this.close();
+      console.log('closing popup')
+    }, this.props.closeAfter);
   }
 
   componentWillUnmount() {

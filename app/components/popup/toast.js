@@ -48,11 +48,17 @@ export class Toast extends React.Component {
 
     this.state = {
       popups: [],
-      currentIndex: 0
+      currentIndex: 0,
+      initialToastDisplayed: false
     };
 
-    this._transitionTimeout = 2500;
+    this._transitionTimeout = 1200;
+    this._initialShowDelay = 500;
   }
+
+  setInitialToastDisplayed = () => {
+    this.setState({initialToastDisplayed: true})
+  };
 
   queue = popup => {
     if (popup.title) {
@@ -87,16 +93,17 @@ export class Toast extends React.Component {
 
   render() {
     // if (SBHSStore.state !== SBHSStore.LOGGED_IN) return null;
-    const {popups, currentIndex} = this.state;
+    const {popups, currentIndex, initialToastDisplayed} = this.state;
     let popupElements;
     if (popups && popups.length) popupElements = popups.map((v, i) => {
       return <Popup onClose={() => this._onClose(i)}
                     closeTimeout={v.closeTimeout ? v.closeTimeout : (v.instantClose ? false : undefined)}
                     text={v.title}
                     show={v.read === true ? false : i === currentIndex}
-                    showDelay={this._transitionTimeout}
+                    showDelay={initialToastDisplayed ? this._transitionTimeout : this._initialShowDelay}
                     key={i}
                     closeAfter={v.closeAfter}
+                    setInitialToastDisplayed={this.setInitialToastDisplayed}
       />;
     });
     else popupElements = null;

@@ -179,10 +179,9 @@ export class Today extends React.Component {
           }
 
           if (!bell.room) {
-            return <div
-              key={i}
-              className={STYLE.period}
-              style={bell.isAssessment ? null : {'color': accentColor}}>
+            const assessmentHasEndTime = bell.isAssessment && bell.time && bell.toRaw;
+
+            const bellElementInner = <>
               <div style={{
                 'flexGrow': '1',
                 'fontSize': '1.2em',
@@ -191,13 +190,37 @@ export class Today extends React.Component {
               }}>
                 {bell.title}
               </div>
-              <div style={{
-                'fontSize': '1.2em',
-                'color': bell.variations.indexOf('time') < 0 ? null : VARIATION_COLOR
-              }}>
-                {bell.time}
+
+              {assessmentHasEndTime ? (
+                <div style={{fontSize: '0.9em'}}>
+                  <span style={{color: accentColor}}>from </span>
+                  {bell.time}
+                  <span style={{color: accentColor}}> to </span>
+                  {bell.toRaw}
+                </div>
+              ) : (
+                <div style={{
+                  'fontSize': '1.2em',
+                  'color': bell.variations.indexOf('time') < 0 ? null : VARIATION_COLOR
+                }}>
+                  {bell.time}
+                </div>
+              )}
+            </>;
+
+            return (
+              <div
+                key={i}
+                className={STYLE.period}
+                style={bell.isAssessment ? null : {'color': accentColor}}
+              >
+                {assessmentHasEndTime ? (
+                  <div key={i} style={{'flexGrow': '1'}}>
+                    {bellElementInner}
+                  </div>
+                ) : bellElementInner}
               </div>
-            </div>;
+            );
           }
 
           return <div key={i} className={STYLE.period}>
