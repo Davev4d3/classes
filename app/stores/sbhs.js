@@ -223,11 +223,20 @@ class SBHSStore extends Emitter {
     });
   }
 
-  _fetchCalendar() {
-    if (this.token && this.calendar === undefined) {
+  _fetchCalendar(dateRaw, specificDay) {
+    if (this.token && (this.calendar === undefined || dateRaw)) {
       this.calendar = null;
 
-      get(`https://student.sbhs.net.au/api/diarycalendar/events.json?access_token=${encodeURIComponent(this.token)}` + this._date, (err, objectString) => {
+      let url = `https://student.sbhs.net.au/api/diarycalendar/events.json?access_token=${encodeURIComponent(this.token)}`;
+      if (dateRaw) {
+        const encoded = encodeURIComponent(dateRaw);
+        url += '&from=' + encoded;
+        if (specificDay) url += '&to=' + encoded;
+      } else {
+        url += this._date;
+      }
+
+      get(url, (err, objectString) => {
         if (err) return;
 
         const data = JSON.parse(objectString);

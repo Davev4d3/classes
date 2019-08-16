@@ -19,6 +19,10 @@ export function findByKeyNested(arr, key, nestedKey, needle) {
   return arr.find(x => x[key][nestedKey] === needle);
 }
 
+export function findByKeyNestedWith(arr, key, nestedKey, needle, comparator) {
+  return arr.find(x => comparator(x[key][nestedKey], needle));
+}
+
 /**
  * Same as findByKey, but performs an un-type-script comparison on the property values.
  *
