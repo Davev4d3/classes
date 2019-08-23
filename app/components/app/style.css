@@ -15,7 +15,7 @@
   }
 
   .item::after {
-    content: attr(title);
+    content: attr(itemname);
     padding-left: 1em;
     padding-right: 1em;
   }

@@ -40,6 +40,7 @@
   width: auto;
   background: #fafafa svg-load(arrow.svg) no-repeat right 8px center / 10px;
   font: inherit;
+  cursor: pointer;
 }
 
 .select > option {

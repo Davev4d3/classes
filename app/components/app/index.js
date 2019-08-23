@@ -4,7 +4,6 @@ import { Today } from '../today';
 import Timetable from '../timetable';
 import { Notices } from '../notices';
 import { Settings } from '../settings';
-
 import { Tabs } from '../tabs';
 import Icon from '../icon';
 import Loader from '../loader';
@@ -15,12 +14,34 @@ import NetworkStore from '../../stores/network';
 import STYLE from './style.css';
 import createReactClass from 'create-react-class';
 import { ThemeProvider } from '../themes';
+import { MediaQuery } from '../media-query';
 
-function button(icon, tooltip) {
-  return <div className={STYLE.item + ' ' + STYLE.button} title={tooltip}>
-    <Icon icon={icon}/>
-  </div>;
+const collapseMediaQuery = new MediaQuery('min-width: 768px');
+
+function Button(props) {
+  const [collapseState, setCollapseState] = React.useState(false);
+  const {tooltip, icon, buttonStyle} = props;
+
+  React.useEffect(() => {
+    const onChange = ({matches}) => setCollapseState(matches);
+    collapseMediaQuery.addEventListener(onChange);
+    return () => collapseMediaQuery.removeEventListener(onChange);
+  }, [collapseState]);
+
+  return (
+    <div
+      className={buttonStyle ? STYLE.item + ' ' + STYLE.button : STYLE.item}
+      title={tooltip ? (collapseState ? null : tooltip) : null}
+      itemname={tooltip}
+    >
+      {icon && <Icon icon={icon}/>}
+    </div>
+  );
 }
+
+Button.defaultProps = {
+  buttonStyle: true
+};
 
 export default createReactClass({
   getData() {
@@ -49,11 +70,12 @@ export default createReactClass({
 
   render() {
     let tabs = [
-      {button: button('timer', 'Today'), content: <Today/>},
-      {button: button('calendar', 'Timetable'), content: <Timetable/>},
-      {button: button('news', 'Daily Notices'), content: <Notices/>},
-      {button: button('settings', 'Settings'), content: <Settings/>},
-      {}];
+      {button: <Button icon={'timer'} tooltip={'Today'}/>, content: <Today/>},
+      {button: <Button icon={'calendar'} tooltip={'Timetable'}/>, content: <Timetable/>},
+      {button: <Button icon={'news'} tooltip={'Daily Notices'}/>, content: <Notices/>},
+      {button: <Button icon={'settings'} tooltip={'Settings'}/>, content: <Settings/>},
+      {}
+    ];
 
     if (!this.state.online) {
       tabs.push({
@@ -74,7 +96,7 @@ export default createReactClass({
           break;
         case SBHSStore.LOGGED_IN:
           tabs.push({
-            button: button('logout', 'Log Out'),
+            button: <Button icon={'logout'} tooltip={'Log Out'}/>,
             onClick() {
               SBHSStore.constructor.clearCache();
               window.location.href = '/auth/logout';
@@ -83,7 +105,7 @@ export default createReactClass({
           break;
         case SBHSStore.LOGGED_OUT:
           tabs.push({
-            button: button('login', 'Log In'),
+            button: <Button icon={'login'} tooltip={'Log In'}/>,
             onClick() {
               window.location.href = '/auth/login';
             }
