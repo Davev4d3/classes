@@ -5,7 +5,7 @@ import { Countdown } from '../countdown';
 import Loader from '../loader';
 import parseTime from '../../utilities/parse-time';
 import STYLE from './style.css';
-import SettingsStore from '../../stores/settings';
+import { SettingsStore } from '../../stores/settings';
 import { Assessments } from '../assessments/assessments';
 import { TimerDynamic } from '../../utilities/timer';
 import { THEME_COLORS, ThemeContext, THEMES } from '../themes';

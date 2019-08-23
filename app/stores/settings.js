@@ -1,20 +1,44 @@
 import Emitter from '../utilities/emitter';
+const localStorage = window['localStorage'];
 
-let localStorage = window['localStorage'];
+export const SettingsToggleable = [
+  {
+    name: 'Expand Notices',
+    id: 'expandNotices',
+    default: false
+  },
+  {
+    name: 'Load Next Day',
+    id: 'loadNextDay',
+    default: true
+  },
+  {
+    name: 'Show Breaks',
+    id: 'showBreaks',
+    default: true
+  },
+  {
+    name: 'Show Assessments',
+    id: 'showAssessments',
+    default: true
+  },
+];
 
-class SettingsStore extends Emitter {
+class SettingsStoreClass extends Emitter {
   constructor() {
     super();
 
-    this.expandNotices = JSON.parse(localStorage['expandNotices'] || false); // true, false
-    this.loadNextDay = JSON.parse(localStorage['loadNextDay'] || true);
-    this.showBreaks = JSON.parse(localStorage['showBreaks'] || true); // bool
-    this.showAssessments = JSON.parse(localStorage['showAssessments'] || true); // bool
+    for (const setting of SettingsToggleable) {
+      const defaultSetting = setting.default || false;
+      const storedSetting = localStorage['expandNotices'];
+      this[setting.id] = (storedSetting && JSON.parse(storedSetting)) || defaultSetting;
+    }
+
     this.noticesFilter = JSON.parse(localStorage['noticesFilter'] || null); // null, '7', '8', '9', '10', '11', '12', 'Staff'
   }
 
   update(data) {
-    for (let key in data) {
+    for (const key in data) {
       if (data.hasOwnProperty(key)) {
         localStorage[key] = JSON.stringify(data[key]);
         this[key] = data[key];
@@ -25,4 +49,4 @@ class SettingsStore extends Emitter {
   }
 }
 
-export default new SettingsStore();
+export const SettingsStore = new SettingsStoreClass();

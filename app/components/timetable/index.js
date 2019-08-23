@@ -7,7 +7,7 @@ import Centered from '../centered';
 import SBHSException from '../sbhs-exception';
 import Loader from '../loader';
 
-import SettingsStore from '../../stores/settings';
+import {SettingsStore }from '../../stores/settings';
 import { Assessments } from '../assessments/assessments';
 
 import STYLE from './style.css';

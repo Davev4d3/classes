@@ -1,10 +1,8 @@
 import React from 'react';
-import createReactClass from 'create-react-class';
-import Centered from '../centered';
-import Toggle from '../toggle';
-import SettingsStore from '../../stores/settings';
 import s from './style.css';
-
+import Centered from '../centered';
+import { Toggle } from '../toggle';
+import { SettingsStore, SettingsToggleable } from '../../stores/settings';
 import { THEMES, ThemeToggleExample, useTheme, useThemeSetState } from '../themes';
 
 const DarkThemeToggle = props => {
@@ -15,25 +13,27 @@ const DarkThemeToggle = props => {
     <div className={s.row}>
       <div className={s.inner__left}>Dark Theme</div>
       <div className={s.inner__right}>
-        <Toggle enabled={themeState.theme === THEMES.DARK}
+        <Toggle checked={themeState.theme === THEMES.DARK}
                 onChange={(newState) => themeSetState({theme: newState ? THEMES.DARK : THEMES.LIGHT})}/>
       </div>
     </div>
   )
 };
 
-export default createReactClass({
-  getInitialState() {
-    return {
+export class Settings extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       expandNotices: SettingsStore.expandNotices,
       showBreaks: SettingsStore.showBreaks,
       showAssessments: SettingsStore.showAssessments,
       noticesFilter: SettingsStore.noticesFilter,
       loadNextDay: SettingsStore.loadNextDay
     };
-  },
+  }
 
-  update() {
+  update = () => {
     this.setState({
       expandNotices: SettingsStore.expandNotices,
       showBreaks: SettingsStore.showBreaks,
@@ -41,22 +41,34 @@ export default createReactClass({
       noticesFilter: SettingsStore.noticesFilter,
       loadNextDay: SettingsStore.loadNextDay
     });
-  },
+  };
 
-  clearAllData() {
+  static clearData() {
     window['localStorage']['clear']();
     window['location']['reload']();
-  },
+  }
 
   componentDidMount() {
     SettingsStore.bind('update', this.update);
-  },
+  }
 
   componentWillUnmount() {
     SettingsStore.unbind('update', this.update);
-  },
+  }
 
   render() {
+    const toggleSettings = SettingsToggleable.map((v, i) => (
+      <div className={s.row} key={i}>
+        <div className={s.inner__left}>{v.name}</div>
+        <div className={s.inner__right}>
+          <Toggle
+            checked={this.state[v.id]}
+            onChange={(newState) => SettingsStore.update({[v.id]: newState})}
+          />
+        </div>
+      </div>
+    ));
+
     return <Centered vertical horizontal>
       <div className={s.settings}>
         <div className={s.rowContainer}>
@@ -67,37 +79,7 @@ export default createReactClass({
 
           <DarkThemeToggle/>
 
-          <div className={s.row}>
-            <div className={s.inner__left}>Expand Notices</div>
-            <div className={s.inner__right}>
-              <Toggle enabled={this.state.expandNotices}
-                      onChange={(newState) => SettingsStore.update({expandNotices: newState})}/>
-            </div>
-          </div>
-
-          <div className={s.row}>
-            <div className={s.inner__left}>Load Next Day</div>
-            <div className={s.inner__right}>
-              <Toggle enabled={this.state.loadNextDay}
-                      onChange={(newState) => SettingsStore.update({loadNextDay: newState})}/>
-            </div>
-          </div>
-
-          <div className={s.row}>
-            <div className={s.inner__left}>Show Breaks</div>
-            <div className={s.inner__right}>
-              <Toggle enabled={this.state.showBreaks}
-                      onChange={(newState) => SettingsStore.update({showBreaks: newState})}/>
-            </div>
-          </div>
-
-          <div className={s.row}>
-            <div className={s.inner__left}>Show Assessments</div>
-            <div className={s.inner__right}>
-              <Toggle enabled={this.state.showAssessments}
-                      onChange={(newState) => SettingsStore.update({showAssessments: newState})}/>
-            </div>
-          </div>
+          {toggleSettings}
 
           <div className={s.row}>
             <div className={s.inner__left}>Notices Filter</div>
@@ -121,11 +103,11 @@ export default createReactClass({
           <div className={s.row}>
             <div className={s.inner__left}>Content Settings</div>
             <div className={s.inner__right}>
-              <button onClick={this.clearAllData}>Clear All Data</button>
+              <button onClick={this.constructor.clearData}>Clear All Data</button>
             </div>
           </div>
         </div>
       </div>
     </Centered>;
   }
-});
+}

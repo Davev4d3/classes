@@ -1,6 +1,6 @@
 import React from 'react';
 import SBHSStore from '../../stores/sbhs';
-import SettingsStore from '../../stores/settings';
+import { SettingsStore } from '../../stores/settings';
 import SBHSException from '../sbhs-exception';
 import Centered from '../centered';
 import Loader from '../loader';

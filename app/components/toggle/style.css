@@ -1,31 +1,37 @@
 $easing: all cubic-bezier(0.23, 1, 0.32, 1) 0.3s;
+$trackBackground: #7f7f7f;
+$headBackground: #fafafa;
+$checkedTrackColor: #80dfff;
+$checkedHeadColor: #00bfff;
 
 .track {
   position: absolute;
   height: 100%; width: 100%;
   border-radius: 8px;
   transition: $easing;
-  background-color: #7F7F7F;
+  background-color: $trackBackground;
   cursor: pointer;
 }
 
 .head {
   position: absolute;
-  top: -3px;
-  height: 20px; width: 20px;
+  transform: translateY(-50%);
+  top: 50%;
+  height: 20px;
+  width: 20px;
   border-radius: 50%;
-  border: 1px solid #7F7F7F;
+  border: 1px solid $trackBackground;
   transition: $easing;
-  background-color: #FAFAFA;
+  background-color: $headBackground;
   cursor: pointer;
 }
 
 .enabled .track {
-  background-color: #80DFFF;
+  background-color: $checkedTrackColor;
 }
 
 .enabled .head {
-  background-color: #00BFFF;
-  border: 1px solid #80DFFF;
-  transform: translateX(16px);
+  background-color: $checkedHeadColor;
+  border: 1px solid $checkedTrackColor;
+  transform: translate(16px, -50%);
 }

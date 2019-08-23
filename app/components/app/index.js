@@ -3,7 +3,7 @@ import React from 'react';
 import { Today } from '../today';
 import Timetable from '../timetable';
 import { Notices } from '../notices';
-import Settings from '../settings';
+import { Settings } from '../settings';
 
 import { Tabs } from '../tabs';
 import Icon from '../icon';

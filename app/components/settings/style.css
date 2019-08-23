@@ -31,12 +31,14 @@
 .select {
   appearance: none;
   padding: 0 8px;
+  padding-right: 2.4em;
   height: 36px;
+  display: block;
   border: 1px solid #ccc;
   border-radius: 4px;
   outline: none;
-  width: 144px;
-  background: #fff svg-load(arrow.svg) no-repeat right 8px center / 10px;
+  width: auto;
+  background: #fafafa svg-load(arrow.svg) no-repeat right 8px center / 10px;
   font: inherit;
 }
 
