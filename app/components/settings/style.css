@@ -91,3 +91,11 @@
 .aboutPopoverSpacer {
   margin-bottom: 1.6em;
 }
+
+.aboutLink {
+  color: inherit;
+  transition: color .2s ease-out;
+  &:hover {
+    color: #8b8b8b;
+  }
+}

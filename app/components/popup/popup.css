@@ -36,7 +36,6 @@
 
 .link {
     color: inherit;
-    opacity: 1;
     text-decoration: underline;
     transition: color .2s ease-out;
     &:hover {

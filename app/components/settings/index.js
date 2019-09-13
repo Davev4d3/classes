@@ -26,11 +26,16 @@ function AboutPopover(props) {
   const themeState = useTheme();
   const accent = {color: themeState.details.accent};
 
-  return <div className={s.aboutPopover} style={{background: themeState.theme === THEMES.DARK ? '#4d4d4d' : '#dedede'}}>
+  return <div className={s.aboutPopover} style={{background: themeState.theme === THEMES.DARK ? '#4d4d4d' : '#ececec'}}>
     <div className={s.aboutPopoverMeta} style={accent}>Made by</div>
-    <div className={s.aboutPopoverSpacer}>Dawei Wu</div>
+    <div className={s.aboutPopoverSpacer}>
+      <a href='http://hellodavie.com/' target='_blank' className={s.aboutLink}>Dawei Wu</a>
+    </div>
     <div className={s.aboutPopoverMeta} style={accent}>Originally created by</div>
-    <div>Ram Kaniyur</div>
+    <div className={s.aboutPopoverSpacer}>Ram Kaniyur</div>
+
+    <div className={s.aboutPopoverMeta} style={accent}>Legal</div>
+    <div><a href='/tos' target='_blank' className={s.aboutLink}>Terms</a></div>
   </div>
 }
 

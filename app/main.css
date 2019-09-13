@@ -37,7 +37,9 @@ html, body {
 }
 
 a {
+  background-color: transparent;
   text-decoration: none;
+  color: inherit;
   transition: .3s;
   cursor: pointer;
 }
