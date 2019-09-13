@@ -3,7 +3,9 @@ import s from './style.css';
 import Centered from '../centered';
 import { Toggle } from '../toggle';
 import { SettingsStore, SettingsToggleable } from '../../stores/settings';
-import { THEMES, ThemeToggleExample, useTheme, useThemeSetState } from '../themes';
+import { THEMES, useTheme, useThemeSetState } from '../themes';
+import { Popup } from '../popover/Popup';
+import { PopupInner } from '../popover/PopupInner';
 
 const DarkThemeToggle = props => {
   const themeState = useTheme();
@@ -19,6 +21,18 @@ const DarkThemeToggle = props => {
     </div>
   )
 };
+
+function AboutPopover(props) {
+  const themeState = useTheme();
+  const accent = {color: themeState.details.accent};
+
+  return <div className={s.aboutPopover} style={{background: themeState.theme === THEMES.DARK ? '#4d4d4d' : '#dedede'}}>
+    <div className={s.aboutPopoverMeta} style={accent}>Made by</div>
+    <div className={s.aboutPopoverSpacer}>Dawei Wu</div>
+    <div className={s.aboutPopoverMeta} style={accent}>Originally created by</div>
+    <div>Ram Kaniyur</div>
+  </div>
+}
 
 export class Settings extends React.Component {
   constructor(props) {
@@ -69,12 +83,20 @@ export class Settings extends React.Component {
       </div>
     ));
 
+    const toggleAbout = <a><div className={s.aboutIcon}/></a>;
+
     return <Centered vertical horizontal>
       <div className={s.settings}>
         <div className={s.rowContainer}>
           <div className={s.row}>
             <div className={s.inner__left}>Classes</div>
-            <div className={s.inner__right}/>
+            <div className={s.inner__right}>
+              <Popup trigger={toggleAbout}>
+                {(isOpen, requestClose) => {
+                  return <AboutPopover/>
+                }}
+              </Popup>
+            </div>
           </div>
 
           <DarkThemeToggle/>

@@ -37,7 +37,6 @@ html, body {
 }
 
 a {
-  color: #0af;
   text-decoration: none;
   transition: .3s;
   cursor: pointer;

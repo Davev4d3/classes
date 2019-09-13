@@ -1,0 +1,22 @@
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9;
+}
+
+.popup-wrapper {
+  position: absolute;
+  z-index: 10;
+  margin-top: 8px;
+}
+
+.popup--inner {
+  padding-top: 1em;
+  padding-right: 0;
+  padding-left: 0;
+  padding-bottom: 1em;
+  overflow: hidden;
+}

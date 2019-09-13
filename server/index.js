@@ -4,8 +4,8 @@ const compression = require('compression');
 const path = require('path');
 const pgSession = require('connect-pg-simple')(session);
 
-const PORT = process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080;
-const IP = process.env.IP || process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
+const PORT = process.env.PORT || 8080;
+const IP = process.env.IP || '0.0.0.0';
 
 const app = express();
 
@@ -13,9 +13,9 @@ app.use(compression());
 
 app.use(session({
   store: process.env.NODE_ENV === 'production' ? new pgSession({
-    conString: process.env.DATABASE_URL || process.env.OPENSHIFT_POSTGRESQL_DB_URL
+    conString: process.env.DATABASE_URL
   }) : null,
-  secret: process.env.COOKIE_SECRET,
+  secret: process.env.COOKIE_SECRET || 'secret',
   saveUninitialized: false,
   resave: false,
   cookie: {maxAge: 90 * 24 * 60 * 60 * 1000} // 90 Days
@@ -40,6 +40,8 @@ require('./auth')(
   process.env.CLIENT_SECRET,
   process.env.REDIRECT_URI
 );
+
+require('./api')(app);
 
 app.listen(PORT, IP, function () {
   console.log('Server up on ' + IP + ':' + PORT + '!');

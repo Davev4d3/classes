@@ -1,21 +1,26 @@
 {
   "name": "classes",
-  "version": "1.1.5",
-  "description": "A modern timetable app for Sydney High.",
+  "version": "2.36.0",
+  "description": "A modern timetable app for students at Sydney High.",
+  "repository": {
+    "url": "https://github.com/hellodavie/shs_classes.git",
+    "type": "git"
+  },
   "scripts": {
     "start": "node server/index",
-    "dev": "webpack-dev-server --mode development --env dev",
-    "build": "webpack --mode production --env prod"
+    "dev": "webpack-dev-server --mode development",
+    "build": "webpack --mode production"
   },
   "private": true,
-  "main": "server/index.js",
-  "author": "Dawei Wu & Ram Kaniyur",
+  "author": {
+    "name": "Dawei Wu",
+    "url": "hellodavie.com"
+  },
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.4.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
-    "appcache-webpack-plugin": "^1.2.0",
     "autoprefixer": "^9.5.0",
     "babel-loader": "^8.0.4",
     "babel-plugin-react-css-modules": "^5.2.3",
@@ -40,6 +45,8 @@
     "connect-pg-simple": "^3.0.2",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
+    "knex": "^0.19.3",
+    "mysql": "^2.17.1",
     "simple-oauth2": "^0.2.1"
   }
 }

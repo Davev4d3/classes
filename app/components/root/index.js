@@ -77,14 +77,7 @@ export default createReactClass({
       {}
     ];
 
-    if (!this.state.online) {
-      tabs.push({
-        button:
-          <div className={STYLE.item} title='Offline'>
-            <Icon icon='disconnected'/>
-          </div>
-      });
-    } else {
+    if (this.state.online) {
       switch (this.state.auth) {
         case SBHSStore.LOADING:
           tabs.push({
@@ -112,6 +105,13 @@ export default createReactClass({
           });
           break;
       }
+    } else {
+      tabs.push({
+        button:
+          <div className={STYLE.item} title='Offline'>
+            <Icon icon='disconnected'/>
+          </div>
+      });
     }
 
     return (

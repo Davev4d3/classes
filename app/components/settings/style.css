@@ -46,3 +46,48 @@
 .select > option {
   font-size: 1rem;
 }
+
+.aboutIcon {
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+  position: relative;
+  padding: 2px;
+  opacity: 1;
+  transition: opacity .2s ease-out;
+
+  &:hover {
+    opacity: .7;
+   }
+}
+
+.aboutIcon:after {
+  content: 'i';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.aboutPopover {
+  padding: 1.2em;
+  overflow: hidden;
+  border-radius: 4px;
+  position: relative;
+  margin-top: 1.6em;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  box-shadow: 0 2px 9px 0 rgba(22, 22, 22, 0.1);
+}
+
+.aboutPopoverMeta {
+  font-size: 64%;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.aboutPopoverSpacer {
+  margin-bottom: 1.6em;
+}

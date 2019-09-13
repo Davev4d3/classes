@@ -1,8 +1,6 @@
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const path = require('path');
-const AppCachePlugin = require('appcache-webpack-plugin');
-const fs = require('fs');
 
 const ManifestPlugin = require('webpack-manifest-plugin');
 const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
@@ -22,9 +20,6 @@ const plugins = [
 
   new ManifestPlugin({
     fileName: 'asset-manifest.json',
-    filter: function (file) {
-      return file.name !== 'main.appcache'
-    },
     seed: [
       'index.html',
       'roboto-light.woff',
@@ -36,10 +31,9 @@ const plugins = [
   })
 ];
 
-module.exports = env => {
-  const isProduction = process.env.NODE_ENV !== 'development' && env !== 'dev';
-  // const cssExtractorPlugin = isProduction ? require('mini-css-extract-plugin') : null;
-  const cssExtractor = isProduction ? 'style-loader' /* cssExtractorPlugin.loader */ : 'style-loader';
+module.exports = (env, argv) => {
+  const isProduction = argv.mode === 'production';
+  const cssExtractor = 'style-loader';
   if (isProduction) {
     plugins.push(
       new SWPrecacheWebpackPlugin({
@@ -128,6 +122,11 @@ module.exports = env => {
 
         {test: /\.(woff|woff2|eot|ttf)$/, loader: 'null-loader'}
       ]
-    }
+    },
+
+    resolve: {
+      extensions: ["*", ".js", ".json", ".jsx"],
+      modules: ['src', 'node_modules']
+    },
   };
 };
