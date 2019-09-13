@@ -10,13 +10,16 @@ const POPUP_TYPES = {LOCAL: 'popups', REMOTE: 'popovers'};
 export class PopupManager extends React.Component {
   constructor(props) {
     super(props);
-    this._allPopups = null;
+    this._allPopups = {};
   }
 
-  onPopupClosed = () => this.storePopups();
+  onPopupClosed = (type) => {
+    console.log('closed', type, this._allPopups);
+    return this.storePopups(type);
+  };
 
   storePopups = (type) => {
-    const popups = this._allPopups;
+    const popups = this._allPopups[type];
     if (popups && popups.length) {
       try {
         localStorage[type] = JSON.stringify(popups)
@@ -39,8 +42,9 @@ export class PopupManager extends React.Component {
   checkPopups(popupList, type) {
     const storedPopups = localStorage[type] ? JSON.parse(localStorage[type]) : [];
     const popups = [];
+    const allPopup = [];
+    this._allPopups[type] = allPopup;
 
-    this._allPopups = [];
     for (const popupsListElement of popupList) {
       const stored = findByKey(storedPopups, 'title', popupsListElement.title);
       if (stored) {
@@ -49,11 +53,12 @@ export class PopupManager extends React.Component {
         popups.push(popupsListElement);
       }
 
-      this._allPopups.push(stored ? stored : popupsListElement);
+      allPopup.push(stored ? stored : popupsListElement);
     }
 
+    const onClose = () => this.onPopupClosed(type);
     for (const popup of popups) {
-      popup.onClose = this.onPopupClosed;
+      popup.onClose = onClose;
       ToastEvents.trigger(TOAST_ACTION_QUEUE, popup)
     }
 

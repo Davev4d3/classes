@@ -36,9 +36,8 @@ module.exports = function (app) {
         .limit(1)
         .count()
         .then((data) => {
-          res.send(JSON.stringify(data));
-          // respond(res, data)
-          // respond(res, {authorised: data[0].count === 0})
+          const count = data[0].count;
+          respond(res, {authorised: count === '0' || count === 0})
         })
         .catch(e => respondErrorInternal(res, e))
     } else {

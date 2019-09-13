@@ -412,10 +412,7 @@ class SBHSStore extends Emitter {
     get(`/api/user?student_id=${encodeURIComponent(studentId)}`, (err, raw) => {
       if (err) return;
       const data = JSON.parse(raw);
-      if (data.err) return;
-      if (!data.data.authorised) {
-        this._resetUserData();
-      }
+      if (data.data && !data.data.authorised) this._resetUserData();
     })
   }
 

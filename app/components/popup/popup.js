@@ -94,14 +94,14 @@ export class Popup extends React.Component {
     // Display close button after some time
     if (!this.state.closeVisible) {
       this._closeTimeout = setTimeout(this.showClose,
-            this.props.showDelay ? this.props.showDelay + this.props.closeTimeout : this.props.closeTimeout);
+        this.props.showDelay ? this.props.showDelay + this.props.closeTimeout : this.props.closeTimeout);
     }
     // Automatically close after some time
     if (this.props.animateOnMount) this.handleShow();
     else if (this.props.closeAfter) this.setCloseAfterTimeout();
   }
 
-  setCloseAfterTimeout(){
+  setCloseAfterTimeout() {
     if (this.props.closeAfter) this._closeAfterTimeout = setTimeout(() => {
       this.close();
       console.log('closing popup')
@@ -120,9 +120,17 @@ export class Popup extends React.Component {
     const style = this.state.show ? {} : {transform: 'translateY(-100%)'};
     if (this.state.easeIn) style.transitionTimingFunction = 'cubic-bezier(0.23, 1, 0.32, 1)';
 
+    const {linkText, url} = this.props;
+    const link = (linkText && url) && (
+      <span> <a href={url} target='_blank' className={s.link}>{linkText}</a></span>
+    );
+
     return (
       <div className={s.container} style={style}>
-        <span className={s.text}>{this.props.text}</span>
+        <span className={s.text}>
+          {this.props.text}
+          {link}
+        </span>
         <a className={s.buttonContainer} onClick={this.state.closeVisible ? this.close : null}>
           <div className={s.button}
                style={this.state.closeVisible ? null : {opacity: 0, pointerevents: 'none', cursor: 'normal'}}>x
