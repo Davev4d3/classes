@@ -28,4 +28,17 @@ module.exports = function (app) {
       .then(data => respond(res, data))
       .catch(e => respondErrorInternal(res, e))
   });
+
+  app.get('/api/user', function (req, res) {
+    if (req.query.student_id) {
+      db('users')
+        .where('student_id', req.query.student_id)
+        .limit(1)
+        .count('id as count')
+        .then(({count}) => respond(res, {authorised: !count}))
+        .catch(e => respondErrorInternal(res, e))
+    } else {
+      respondErrorBadRequest(res)
+    }
+  });
 };
