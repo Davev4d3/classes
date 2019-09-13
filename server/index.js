@@ -32,7 +32,9 @@ function wwwRedirect(req, res, next) {
 app.set('trust proxy', true);
 app.use(wwwRedirect);
 
-app.use(express.static(path.join(path.dirname(__dirname), 'public')));
+app.use(express.static(path.join(path.dirname(__dirname), 'public'), {
+  extensions: ['html']
+}));
 
 require('./auth')(
   app,
