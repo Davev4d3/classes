@@ -20,7 +20,8 @@ export class PopupManager extends React.Component {
 
   storePopups = (type) => {
     const popups = this._allPopups[type];
-    if (popups && popups.length) {
+    if (popups) {
+      if (!popups.length && !localStorage[type]) return;
       try {
         localStorage[type] = JSON.stringify(popups)
       } catch (e) {
@@ -33,7 +34,7 @@ export class PopupManager extends React.Component {
     get('/api/notice', (err, raw) => {
       if (err) return;
       const data = JSON.parse(raw);
-      if (data.data && data.data.length) {
+      if (data.data) {
         this.checkPopups(data.data, POPUP_TYPES.REMOTE)
       }
     })
