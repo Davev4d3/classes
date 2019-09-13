@@ -24,7 +24,7 @@ function respondSuccess(res) {
 module.exports = function (app) {
   app.get('/api/notice', function (req, res) {
     db('notices')
-      .select('description', 'link', 'url')
+      .select('description AS title', 'link', 'url')
       .then(data => respond(res, data))
       .catch(e => respondErrorInternal(res, e))
   });

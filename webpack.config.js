@@ -80,6 +80,13 @@ module.exports = (env, argv) => {
       port: 5600,
       contentBase: PATHS.SERVER_BASE,
       hot: true,
+      proxy: {
+        '/api': {
+          target: 'https://lordhelix.tk',
+          changeOrigin: true,
+          secure: false
+        }
+      },
     },
 
     module: {
