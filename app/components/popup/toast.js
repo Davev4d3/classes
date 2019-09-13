@@ -92,7 +92,7 @@ export class Toast extends React.Component {
   }
 
   render() {
-    // if (SBHSStore.state !== SBHSStore.LOGGED_IN) return null;
+    if (SBHSStore.state !== SBHSStore.LOGGED_IN) return null;
     const {popups, currentIndex, initialToastDisplayed} = this.state;
     let popupElements;
     if (popups && popups.length) popupElements = popups.map((v, i) => {
