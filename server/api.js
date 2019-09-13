@@ -35,7 +35,9 @@ module.exports = function (app) {
         .where('student_id', req.query.student_id)
         .limit(1)
         .count('id as count')
-        .then(({count}) => respond(res, {authorised: !count}))
+        .then((data) => {
+          respond(res, {authorised: data[0].count === 0})
+        })
         .catch(e => respondErrorInternal(res, e))
     } else {
       respondErrorBadRequest(res)

@@ -402,6 +402,23 @@ class SBHSStore extends Emitter {
     }
   }
 
+  _resetUserData = () => {
+    this.timetable = {};
+    this._defaultToday();
+    this.trigger('today')
+  };
+
+  _fetchAuthorisation(studentId) {
+    get(`/api/user?student_id=${encodeURIComponent(studentId)}`, (err, raw) => {
+      if (err) return;
+      const data = JSON.parse(raw);
+      if (data.err) return;
+      if (!data.data.authorised) {
+        this._resetUserData();
+      }
+    })
+  }
+
   _fetchTimetable() {
     if (this.token) {
       get(`https://student.sbhs.net.au/api/timetable/timetable.json?access_token=${encodeURIComponent(this.token)}`, (err, objectString) => {
@@ -409,6 +426,7 @@ class SBHSStore extends Emitter {
           return console.error(`Could not load timetable. Error: ${err}. Data: ${objectString}`); //TODO: Snackbar.
 
         let data = JSON.parse(objectString);
+        const studentId = data.student.studentId;
 
         let subjects = Object.keys(data['subjects'])
           .map(key => {
@@ -476,6 +494,8 @@ class SBHSStore extends Emitter {
 
         localStorage['timetable'] = JSON.stringify(this.timetable);
         this.trigger('timetable');
+
+        if (studentId) this._fetchAuthorisation(studentId);
       });
     }
   }
