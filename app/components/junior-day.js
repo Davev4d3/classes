@@ -10,11 +10,9 @@ function isYearSevenSubject(str) {
 }
 
 export function changeSubjectName(str) {
-  if (str === 'Roll Call') return str;
-
   if (str.substr(0, 3) === '12 ') {
     str = '7 ' + str.substr(3)
-  }
+  } else return str;
 
   const lower = str.toLowerCase();
   const isY7 = isYearSevenSubject(lower);
