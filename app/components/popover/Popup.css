@@ -11,6 +11,11 @@
   position: absolute;
   z-index: 10;
   margin-top: 8px;
+  pointer-events: none;
+
+  & > div {
+    pointer-events: auto;
+  }
 }
 
 .popup--inner {

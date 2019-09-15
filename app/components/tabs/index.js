@@ -2,7 +2,7 @@ import React from 'react';
 import STYLE from './style.css';
 import { Toast } from '../popup/toast';
 import { PopupManager } from '../popup/popup-manager';
-import { ThemeContext } from '../themes';
+import { PRIMARY_COLOR_CSS, ThemeContext } from '../themes';
 
 export class Tabs extends React.Component {
   static contextType = ThemeContext;
@@ -14,23 +14,26 @@ export class Tabs extends React.Component {
   }
 
   render() {
-    const backgroundColor = (this.context && this.context.details) ? this.context.details.background : null;
-    const fontColor = (this.context && this.context.details) ? this.context.details.color : null;
+    const hasTheme = this.context && this.context.details;
+    const backgroundColor = hasTheme ? this.context.details.background : null;
+    const fontColor = hasTheme ? this.context.details.color : null;
+    const primaryColor = hasTheme ? this.context.details.primaryColor : null;
 
     let buttons = this.props.tabs.map((tab, i) => {
       if (!this.props.tabs[i].button) return <li key={i} className={STYLE.divider}/>;
 
+      const active = i === this.state.selectedIndex;
       return <li
         key={i}
         className={STYLE.button}
-        style={{'color': i === this.state.selectedIndex ? '#00BFFF' : null}}
+        style={active ? (primaryColor ? {color: PRIMARY_COLOR_CSS} : {'color': '#00BFFF'}) : null}
         onClick={tab.content ? () => this.setState({selectedIndex: i}) : tab.onClick}>
         {tab.button}
       </li>;
     });
 
     return (
-      <div className={STYLE.container} style={backgroundColor ? {backgroundColor, color: fontColor} : null}>
+      <div className={STYLE.container} style={hasTheme ? {backgroundColor, color: fontColor, '--primary-color': primaryColor} : null}>
         <ul className={STYLE.nav} style={{position: 'fixed'}}>{buttons}</ul>
         <ul className={STYLE.nav}/>
 

@@ -1,24 +1,27 @@
 import React from 'react';
-import createReactClass from 'create-react-class';
-
+import STYLE from './style.css';
 import SBHSStore from '../../stores/sbhs';
-
 import Centered from '../centered';
 import SBHSException from '../sbhs-exception';
 import Loader from '../loader';
-
-import {SettingsStore }from '../../stores/settings';
+import { SettingsStore } from '../../stores/settings';
 import { Assessments } from '../assessments/assessments';
-
-import STYLE from './style.css';
-
 import { WEEKDAYS, WEEKS } from '../../data/day-constants';
+import { PRIMARY_COLOR_CSS, ThemeContext } from '../themes';
 
 const LOGIN_MESSAGE = <span>
   <a onClick={() => window.location.href = '/auth/login'}>Login</a> to load your timetable!
 </span>;
 
-export default createReactClass({
+export default class Timetable extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = this.getInitialState();
+  }
+
+  static contextType = ThemeContext;
+
   getInitialState() {
     let weekday = WEEKDAYS[0], week = WEEKS[0];
     if (SBHSStore.today && SBHSStore.today.day) {
@@ -32,22 +35,22 @@ export default createReactClass({
       weekday: weekday,
       week: week
     };
-  },
+  }
 
-  getData() {
+  getData = () => {
     this.setState({
       days: (SBHSStore.timetable || {}).days
     });
-  },
+  };
 
   componentWillMount() {
     SBHSStore.bind('timetable', this.getData);
     this.getData();
-  },
+  }
 
   componentWillUnmount() {
     SBHSStore.unbind('timetable', this.getData);
-  },
+  }
 
   render() {
     if (!this.state.days)
@@ -74,6 +77,9 @@ export default createReactClass({
       periods = (Assessments.updateTimetable(periods, currentDay.dayNumber))
     }
 
+    const hasTheme = this.context && this.context.details;
+    const primaryColor = hasTheme ? this.context.details.primaryColor : null;
+
     return <Centered horizontal vertical>
       <div className={STYLE.controls}>
         <div className={STYLE.row}>
@@ -81,7 +87,7 @@ export default createReactClass({
             <div
               key={i}
               className={STYLE.control}
-              style={{'color': this.state.weekday == weekday ? '#00BFFF' : null}}
+              style={this.state.weekday == weekday ? (primaryColor ? {color: PRIMARY_COLOR_CSS} : {'color': '#00BFFF'}) : null}
               onClick={() => this.setState({weekday: weekday})}>
               {weekday[0]}
             </div>)}
@@ -91,7 +97,7 @@ export default createReactClass({
             <div
               key={i}
               className={STYLE.control}
-              style={{'color': this.state.week == week ? '#00BFFF' : null}}
+              style={this.state.week == week ? (primaryColor ? {color: PRIMARY_COLOR_CSS} : {'color': '#00BFFF'}) : null}
               onClick={() => this.setState({week: week})}>
               {week}
             </div>)}
@@ -117,4 +123,4 @@ export default createReactClass({
       </div> : null}
     </Centered>;
   }
-});
+}

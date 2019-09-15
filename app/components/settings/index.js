@@ -3,9 +3,8 @@ import s from './style.css';
 import Centered from '../centered';
 import { Toggle } from '../toggle';
 import { SettingsStore, SettingsToggleable } from '../../stores/settings';
-import { THEMES, useTheme, useThemeSetState } from '../themes';
+import { PRIMARY_COLOR_NAMES, PRIMARY_COLORS, THEMES, useTheme, useThemeSetState } from '../themes';
 import { Popup } from '../popover/Popup';
-import { PopupInner } from '../popover/PopupInner';
 
 const DarkThemeToggle = props => {
   const themeState = useTheme();
@@ -21,6 +20,55 @@ const DarkThemeToggle = props => {
     </div>
   )
 };
+
+function ColorPicker(props) {
+  const themeState = useTheme();
+  const themeSetState = useThemeSetState();
+
+  const accent = {color: themeState.details && themeState.details.accent || null};
+
+  return <div className={s.aboutPopover} style={{background: themeState.theme === THEMES.DARK ? '#4d4d4d' : '#ececec'}}>
+    <div className={s.aboutPopoverMeta} style={accent}>Primary Colours</div>
+    <div className={s.aboutPopoverSpacer}/>
+
+    <div className={s.colorGrid}>
+      {Object.keys(PRIMARY_COLORS).map((v, i) => {
+        const color = PRIMARY_COLORS[v];
+        return (
+          <a className={s.colorGridItemContainer} key={i} onClick={() => {
+            console.log(v)
+            themeSetState({primaryColor: v});
+          }}>
+            <div className={s.colorGridItem} style={{background: color}}/>
+          </a>
+        )
+      })}
+    </div>
+
+  </div>
+}
+
+function PrimaryColorSetting(props) {
+  const themeState = useTheme();
+  const background = themeState && themeState.details && themeState.details.primaryColor;
+
+  const toggleColorPicker = <a>
+    <div className={s.colorCircle} style={background ? {background} : null}/>
+  </a>;
+
+  return (
+    <div className={s.row}>
+      <div className={s.inner__left}>Primary Colour</div>
+      <div className={s.inner__right}>
+        <Popup trigger={toggleColorPicker}>
+          {(isOpen, requestClose) => {
+            return <ColorPicker/>
+          }}
+        </Popup>
+      </div>
+    </div>
+  )
+}
 
 function AboutPopover(props) {
   const themeState = useTheme();
@@ -88,7 +136,9 @@ export class Settings extends React.Component {
       </div>
     ));
 
-    const toggleAbout = <a><div className={s.aboutIcon}/></a>;
+    const toggleAbout = <a>
+      <div className={s.aboutIcon}/>
+    </a>;
 
     return <Centered vertical horizontal>
       <div className={s.settings}>
@@ -105,6 +155,7 @@ export class Settings extends React.Component {
           </div>
 
           <DarkThemeToggle/>
+          <PrimaryColorSetting/>
 
           {toggleSettings}
 
