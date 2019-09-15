@@ -8,6 +8,7 @@ import { SettingsStore } from '../../stores/settings';
 import { Assessments } from '../assessments/assessments';
 import { WEEKDAYS, WEEKS } from '../../data/day-constants';
 import { PRIMARY_COLOR_CSS, ThemeContext } from '../themes';
+import { checkJuniorDay } from '../junior-day';
 
 const LOGIN_MESSAGE = <span>
   <a onClick={() => window.location.href = '/auth/login'}>Login</a> to load your timetable!
@@ -80,6 +81,8 @@ export default class Timetable extends React.Component {
     const hasTheme = this.context && this.context.details;
     const primaryColor = hasTheme ? this.context.details.primaryColor : null;
 
+    const isJuniorDay = checkJuniorDay(SBHSStore && SBHSStore.today && SBHSStore.today.dateRaw);
+
     return <Centered horizontal vertical>
       <div className={STYLE.controls}>
         <div className={STYLE.row}>
@@ -108,7 +111,7 @@ export default class Timetable extends React.Component {
         {periods.map((period, i) => {
           return <div key={i} className={STYLE.period}>
             <div style={{'fontSize': '1.2em', 'color': period.title ? null : '#AAA'}}>
-              {period.title || 'Free Period'}
+              {period.title ? (isJuniorDay ? changeSubjectName(period.title) : period.title) : 'Free Period'}
 
               {period.isAssessment ? (
                 <div style={{'fontSize': '.8em', 'color': '#AAA', paddingTop: '.2em'}}>

@@ -9,6 +9,7 @@ import { SettingsStore } from '../../stores/settings';
 import { Assessments } from '../assessments/assessments';
 import { TimerDynamic } from '../../utilities/timer';
 import { THEME_COLORS, ThemeContext, THEMES } from '../themes';
+import { checkJuniorDay } from '../junior-day';
 
 const VARIATION_COLOR = '#00BFFF';
 
@@ -152,9 +153,12 @@ export class Today extends React.Component {
     const primaryColor = hasTheme ? this.context.details.primaryColor : null;
     const variationColor = primaryColor || VARIATION_COLOR;
 
+    const isJuniorDay = checkJuniorDay(this.state.dateRaw);
+    console.log('jnr', isJuniorDay, this.state.dateRaw);
+
     return <Centered vertical horizontal>
       {nextBell ? <div className={STYLE.next}>
-        <span style={{'fontSize': '1.5em'}}>{nextBell.title}</span> in
+        <span style={{'fontSize': '1.5em'}}>{(isJuniorDay && nextBell.room) ? changeSubjectName(nextBell.title) : nextBell.title}</span> in
         <Countdown
           to={nextTime}
           className={STYLE.countdown}
@@ -170,7 +174,7 @@ export class Today extends React.Component {
                 'fontSize': '1.5em',
                 'color': bell.variations.indexOf('title') < 0 ? accentColor : variationColor
               }}>
-                {bell.title}
+                {isJuniorDay ? changeSubjectName(bell.title) : bell.title}
               </div>
               <div style={{
                 'fontSize': '1.5em',
@@ -232,7 +236,7 @@ export class Today extends React.Component {
                 'fontSize': '1.2em',
                 'marginBottom': '0.3em',
                 'color': bell.variations.indexOf('title') < 0 ? null : variationColor
-              }}>{bell.title}</div>
+              }}>{isJuniorDay ? changeSubjectName(bell.title) : bell.title}</div>
               <div style={{'fontSize': '0.9em'}}>
                 <span>
                   {'at '}
