@@ -147,7 +147,10 @@ export class Today extends React.Component {
     let {periods, nextBell, nextTime} = this.state,
       simple = !periods.some(e => e.room || e.isAssessment);
 
-    const accentColor = (this.context && this.context.details) ? this.context.details.accent : THEME_COLORS[THEMES.LIGHT].accent;
+    const hasTheme = this.context && this.context.details;
+    const accentColor = (hasTheme) ? this.context.details.accent : THEME_COLORS[THEMES.LIGHT].accent;
+    const primaryColor = hasTheme ? this.context.details.primaryColor : null;
+    const variationColor = primaryColor || VARIATION_COLOR;
 
     return <Centered vertical horizontal>
       {nextBell ? <div className={STYLE.next}>
@@ -165,13 +168,13 @@ export class Today extends React.Component {
               <div style={{
                 'flexGrow': '1',
                 'fontSize': '1.5em',
-                'color': bell.variations.indexOf('title') < 0 ? accentColor : VARIATION_COLOR
+                'color': bell.variations.indexOf('title') < 0 ? accentColor : variationColor
               }}>
                 {bell.title}
               </div>
               <div style={{
                 'fontSize': '1.5em',
-                'color': bell.variations.indexOf('time') < 0 ? null : VARIATION_COLOR
+                'color': bell.variations.indexOf('time') < 0 ? null : variationColor
               }}>
                 {bell.time}
               </div>
@@ -186,7 +189,7 @@ export class Today extends React.Component {
                 'flexGrow': '1',
                 'fontSize': '1.2em',
                 'marginBottom': '0.3em',
-                'color': bell.variations.indexOf('title') < 0 ? null : VARIATION_COLOR
+                'color': bell.variations.indexOf('title') < 0 ? null : variationColor
               }}>
                 {bell.title}
               </div>
@@ -201,7 +204,7 @@ export class Today extends React.Component {
               ) : (
                 <div style={{
                   'fontSize': '1.2em',
-                  'color': bell.variations.indexOf('time') < 0 ? null : VARIATION_COLOR
+                  'color': bell.variations.indexOf('time') < 0 ? null : variationColor
                 }}>
                   {bell.time}
                 </div>
@@ -228,19 +231,19 @@ export class Today extends React.Component {
               <div style={{
                 'fontSize': '1.2em',
                 'marginBottom': '0.3em',
-                'color': bell.variations.indexOf('title') < 0 ? null : VARIATION_COLOR
+                'color': bell.variations.indexOf('title') < 0 ? null : variationColor
               }}>{bell.title}</div>
               <div style={{'fontSize': '0.9em'}}>
                 <span>
                   {'at '}
-                  <span style={{'color': bell.variations.indexOf('time') < 0 ? null : VARIATION_COLOR}}>
+                  <span style={{'color': bell.variations.indexOf('time') < 0 ? null : variationColor}}>
                     {bell.time || 'the time of reckoning'}
                   </span>
                 </span>
                 {' '}
                 <span style={{'color': accentColor}}>
                   {'with '}
-                  <span style={{'color': bell.variations.indexOf('teacher') < 0 ? null : VARIATION_COLOR}}>
+                  <span style={{'color': bell.variations.indexOf('teacher') < 0 ? null : variationColor}}>
                     {bell.teacher || 'no one'}
                   </span>
                 </span>
@@ -248,7 +251,7 @@ export class Today extends React.Component {
             </div>
             <div style={{
               'fontSize': '1.5em',
-              'color': bell.variations.indexOf('room') < 0 ? null : VARIATION_COLOR
+              'color': bell.variations.indexOf('room') < 0 ? null : variationColor
             }}>{bell.room}
             </div>
           </div>;
