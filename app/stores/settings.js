@@ -31,7 +31,7 @@ class SettingsStoreClass extends Emitter {
     for (const setting of SettingsToggleable) {
       const defaultSetting = setting.default || false;
       const storedSetting = localStorage['expandNotices'];
-      this[setting.id] = (storedSetting && JSON.parse(storedSetting)) || defaultSetting;
+      this[setting.id] = storedSetting ? JSON.parse(storedSetting) : defaultSetting;
     }
 
     this.noticesFilter = JSON.parse(localStorage['noticesFilter'] || null); // null, '7', '8', '9', '10', '11', '12', 'Staff'
