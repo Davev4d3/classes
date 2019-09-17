@@ -51,9 +51,15 @@ function ColorPicker(props) {
 function PrimaryColorSetting(props) {
   const themeState = useTheme();
   const background = themeState && themeState.details && themeState.details.primaryColor;
+  const isDark = themeState && themeState.theme === THEMES.DARK;
+
+  const buttonStyle = {
+    borderWidth: isDark ? null : '1px',
+    background: background || null
+  };
 
   const toggleColorPicker = <a>
-    <div className={s.colorCircle} style={background ? {background} : null}/>
+    <div className={s.colorCircle} style={buttonStyle}/>
   </a>;
 
   return (
