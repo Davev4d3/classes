@@ -11,7 +11,8 @@ export class Popup extends React.Component {
     closeAfter: null,
     destroyOnExit: true,
     show: true,
-    animateOnMount: true
+    animateOnMount: true,
+    persistent: false
   };
 
   componentDidUpdate(prevProps) {
@@ -117,25 +118,28 @@ export class Popup extends React.Component {
   render() {
     if (!this.props.text || this.state.exited) return null;
 
+    const {linkText, url, persistent} = this.props;
     const style = this.state.show ? {} : {transform: 'translateY(-100%)'};
     if (this.state.easeIn) style.transitionTimingFunction = 'cubic-bezier(0.23, 1, 0.32, 1)';
+    if (persistent) style.position = 'absolute';
 
-    const {linkText, url} = this.props;
     const link = (linkText && url) && (
       <span> <a href={url} target='_blank' className={s.link}>{linkText}</a></span>
     );
 
     return (
       <div className={s.container} style={style}>
-        <span className={s.text}>
+        <span className={s.text} style={persistent ? {padding: '4px 0'} : null}>
           {this.props.text}
           {link}
         </span>
-        <a className={s.buttonContainer} onClick={this.state.closeVisible ? this.close : null}>
-          <div className={s.button}
-               style={this.state.closeVisible ? null : {opacity: 0, pointerevents: 'none', cursor: 'normal'}}>x
-          </div>
-        </a>
+        {!persistent && (
+          <a className={s.buttonContainer} onClick={this.state.closeVisible ? this.close : null}>
+            <div className={s.button}
+                 style={this.state.closeVisible ? null : {opacity: 0, pointerevents: 'none', cursor: 'normal'}}>x
+            </div>
+          </a>
+        )}
       </div>
     )
   }

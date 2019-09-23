@@ -4,6 +4,7 @@ import SBHSStore from '../../stores/sbhs';
 import Emitter from '../../utilities/emitter';
 
 export const TOAST_ACTION_QUEUE = 'QUEUE';
+const TOAST_PERSISTENT = '`p`';
 
 class ToastEmitter extends Emitter {
   constructor() {
@@ -97,9 +98,17 @@ export class Toast extends React.Component {
     const {popups, currentIndex, initialToastDisplayed} = this.state;
     let popupElements;
     if (popups && popups.length) popupElements = popups.map((v, i) => {
+      let text = v.title;
+      let persistent = false;
+      if (text.endsWith && text.endsWith(TOAST_PERSISTENT)) {
+        persistent = true;
+        text = text.slice(0, -TOAST_PERSISTENT.length)
+      }
+
       return <Popup onClose={() => this._onClose(i)}
                     closeTimeout={v.closeTimeout ? v.closeTimeout : (v.instantClose ? false : undefined)}
-                    text={v.title}
+                    text={text}
+                    persistent={persistent}
                     linkText={v.link}
                     url={v.url}
                     show={v.read === true ? false : i === currentIndex}

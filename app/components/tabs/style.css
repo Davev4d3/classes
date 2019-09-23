@@ -43,6 +43,7 @@ $nav-expanded-width: 10.25em;
   flex-shrink: 1;
   /*overflow: auto;*/
   display: flex;
+  position: relative;
 }
 
 .divider {
