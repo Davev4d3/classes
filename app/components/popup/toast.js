@@ -100,15 +100,16 @@ export class Toast extends React.Component {
     if (popups && popups.length) popupElements = popups.map((v, i) => {
       let text = v.title;
       let persistent = false;
+      let closeTimeout = v.closeTimeout ? v.closeTimeout : (v.instantClose ? false : undefined);
       if (text.endsWith && text.endsWith(TOAST_PERSISTENT)) {
         persistent = true;
-        text = text.slice(0, -TOAST_PERSISTENT.length)
+        text = text.slice(0, -TOAST_PERSISTENT.length);
+        closeTimeout = 8000;
       }
 
-      return <Popup onClose={() => this._onClose(i)}
-                    closeTimeout={v.closeTimeout ? v.closeTimeout : (v.instantClose ? false : undefined)}
+      return <Popup onClose={persistent ? null : () => this._onClose(i)}
+                    closeTimeout={closeTimeout}
                     text={text}
-                    persistent={persistent}
                     linkText={v.link}
                     url={v.url}
                     show={v.read === true ? false : i === currentIndex}
