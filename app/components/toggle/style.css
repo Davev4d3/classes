@@ -45,6 +45,6 @@ $checkedHeadColor: #00bfff;
 .enabled .head {
   background: $checkedHeadColor;
   background: var(--primary-color);
-  border: 1px solid $checkedTrackColor;
+  border: 1px solid $headBackground;
   transform: translate(16px, -50%);
 }

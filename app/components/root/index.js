@@ -19,7 +19,7 @@ import { MediaQuery } from '../media-query';
 const collapseMediaQuery = new MediaQuery('min-width: 768px');
 
 function Button(props) {
-  const [collapseState, setCollapseState] = React.useState(false);
+  const [collapseState, setCollapseState] = React.useState(collapseMediaQuery.matches || false);
   const {tooltip, icon, buttonStyle} = props;
 
   React.useEffect(() => {
