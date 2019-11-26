@@ -3,6 +3,7 @@ import STYLE from './style.css';
 import { Toast } from '../popup/toast';
 import { PopupManager } from '../popup/popup-manager';
 import { PRIMARY_COLOR_CSS, ThemeContext } from '../themes';
+import { pageView } from '../analytics';
 
 export class Tabs extends React.Component {
   static contextType = ThemeContext;
@@ -11,6 +12,17 @@ export class Tabs extends React.Component {
     super(props);
 
     this.state = {selectedIndex: 0};
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.selectedIndex !== this.state.selectedIndex) {
+      console.log(`page-view ${this.state.selectedIndex}`);
+      pageView(this.props.tabs[this.state.selectedIndex].pathname);
+    }
+  }
+
+  componentDidMount() {
+    pageView();
   }
 
   render() {
@@ -33,7 +45,8 @@ export class Tabs extends React.Component {
     });
 
     return (
-      <div className={STYLE.container} style={hasTheme ? {backgroundColor, color: fontColor, '--primary-color': primaryColor} : null}>
+      <div className={STYLE.container}
+           style={hasTheme ? {backgroundColor, color: fontColor, '--primary-color': primaryColor} : null}>
         <ul className={STYLE.nav} style={{position: 'fixed'}}>{buttons}</ul>
         <ul className={STYLE.nav}/>
 

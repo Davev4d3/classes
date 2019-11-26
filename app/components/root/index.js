@@ -12,9 +12,9 @@ import SBHSStore from '../../stores/sbhs';
 import NetworkStore from '../../stores/network';
 
 import STYLE from './style.css';
-import createReactClass from 'create-react-class';
 import { ThemeProvider } from '../themes';
 import { MediaQuery } from '../media-query';
+import { initialiseAnalytics } from '../analytics';
 
 const collapseMediaQuery = new MediaQuery('min-width: 768px');
 
@@ -43,40 +43,62 @@ Button.defaultProps = {
   buttonStyle: true
 };
 
-export default createReactClass({
-  getData() {
+const tabs = [
+  {
+    button: <Button icon={'timer'} tooltip={'Today'}/>,
+    content: <Today/>,
+    pathname: 'today'
+  },
+  {
+    button: <Button icon={'calendar'} tooltip={'Timetable'}/>,
+    content: <Timetable/>,
+    pathname: 'timetable'
+  },
+  {
+    button: <Button icon={'news'} tooltip={'Daily Notices'}/>,
+    content: <Notices/>,
+    pathname: 'notices'
+  },
+  {
+    button: <Button icon={'settings'} tooltip={'Settings'}/>,
+    content: <Settings/>,
+    pathname: 'settings'
+  },
+  {}
+];
+
+export default class Root extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      online: NetworkStore.online,
+      auth: SBHSStore.state
+    };
+  }
+
+  getData = () => {
     this.setState({
       online: NetworkStore.online,
       auth: SBHSStore.state
     });
-  },
-
-  getInitialState() {
-    return {
-      online: NetworkStore.online,
-      auth: SBHSStore.state
-    };
-  },
+  };
 
   componentWillMount() {
     SBHSStore.bind('token', this.getData);
     NetworkStore.bind('online', this.getData);
-  },
+  }
 
   componentWillUnmount() {
     SBHSStore.unbind('token', this.getData);
     NetworkStore.unbind('online', this.getData);
-  },
+  }
+
+  componentDidMount() {
+    initialiseAnalytics();
+  }
 
   render() {
-    let tabs = [
-      {button: <Button icon={'timer'} tooltip={'Today'}/>, content: <Today/>},
-      {button: <Button icon={'calendar'} tooltip={'Timetable'}/>, content: <Timetable/>},
-      {button: <Button icon={'news'} tooltip={'Daily Notices'}/>, content: <Notices/>},
-      {button: <Button icon={'settings'} tooltip={'Settings'}/>, content: <Settings/>},
-      {}
-    ];
-
     if (this.state.online) {
       switch (this.state.auth) {
         case SBHSStore.LOADING:
@@ -120,4 +142,4 @@ export default createReactClass({
       </ThemeProvider>
     )
   }
-});
+}

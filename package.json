@@ -48,6 +48,7 @@
     "express-session": "^1.11.3",
     "knex": "^0.19.3",
     "pg": "^7.12.1",
+    "react-ga": "^2.7.0",
     "simple-oauth2": "^0.2.1"
   }
 }
