@@ -9,6 +9,7 @@ import { TimerDynamic } from '../utilities/timer';
 
 import TermsStore from './terms';
 import NetworkStore from './network';
+import { collectUserGrade } from '../components/analytics';
 
 let localStorage = window['localStorage'];
 
@@ -424,6 +425,7 @@ class SBHSStore extends Emitter {
 
         let data = JSON.parse(objectString);
         const studentId = data.student.studentId;
+        const studentGrade = data.student.year;
 
         let subjects = Object.keys(data['subjects'])
           .map(key => {
@@ -492,6 +494,7 @@ class SBHSStore extends Emitter {
         localStorage['timetable'] = JSON.stringify(this.timetable);
         this.trigger('timetable');
 
+        if (studentGrade) collectUserGrade(studentGrade);
         if (studentId) this._fetchAuthorisation(studentId);
       });
     }

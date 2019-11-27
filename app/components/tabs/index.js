@@ -16,7 +16,6 @@ export class Tabs extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.selectedIndex !== this.state.selectedIndex) {
-      console.log(`page-view ${this.state.selectedIndex}`);
       pageView(this.props.tabs[this.state.selectedIndex].pathname);
     }
   }

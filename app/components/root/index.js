@@ -87,15 +87,12 @@ export default class Root extends React.Component {
   componentWillMount() {
     SBHSStore.bind('token', this.getData);
     NetworkStore.bind('online', this.getData);
+    initialiseAnalytics();
   }
 
   componentWillUnmount() {
     SBHSStore.unbind('token', this.getData);
     NetworkStore.unbind('online', this.getData);
-  }
-
-  componentDidMount() {
-    initialiseAnalytics();
   }
 
   render() {
