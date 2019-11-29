@@ -96,46 +96,37 @@ export default class Root extends React.Component {
   }
 
   render() {
+    let lastTab;
     if (this.state.online) {
-      switch (this.state.auth) {
-        case SBHSStore.LOADING:
-          tabs.push({
-            button:
-              <div className={STYLE.item} title='Loading…'>
-                <Loader style={{width: 30, height: 30}}/>
-              </div>
-          });
-          break;
-        case SBHSStore.LOGGED_IN:
-          tabs.push({
-            button: <Button icon={'logout'} tooltip={'Log Out'}/>,
-            onClick() {
-              SBHSStore.constructor.clearCache();
-              window.location.href = '/auth/logout';
-            }
-          });
-          break;
-        case SBHSStore.LOGGED_OUT:
-          tabs.push({
-            button: <Button icon={'login'} tooltip={'Log In'}/>,
-            onClick() {
-              window.location.href = '/auth/login';
-            }
-          });
-          break;
+      if (this.state.auth === SBHSStore.LOADING) {
+        lastTab = {
+          button: <div className={STYLE.item} title='Loading…'><Loader style={{width: 30, height: 30}}/></div>
+        }
+      } else if (this.state.auth === SBHSStore.LOGGED_IN) {
+        lastTab = {
+          button: <Button icon={'logout'} tooltip={'Log Out'}/>,
+          onClick() {
+            SBHSStore.constructor.clearCache();
+            window.location.href = '/auth/logout';
+          }
+        }
+      } else if (this.state.auth === SBHSStore.LOGGED_OUT) {
+        lastTab = {
+          button: <Button icon={'login'} tooltip={'Log In'}/>,
+          onClick() {
+            window.location.href = '/auth/login';
+          }
+        }
       }
     } else {
-      tabs.push({
-        button:
-          <div className={STYLE.item} title='Offline'>
-            <Icon icon='disconnected'/>
-          </div>
-      });
+      lastTab = {
+        button: <div className={STYLE.item} title='Offline'><Icon icon='disconnected'/></div>
+      }
     }
 
     return (
       <ThemeProvider>
-        <Tabs tabs={tabs}/>
+        <Tabs tabs={lastTab ? [...tabs, lastTab] : tabs}/>
       </ThemeProvider>
     )
   }
