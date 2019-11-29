@@ -47,7 +47,6 @@ const tabs = [
   {
     button: <Button icon={'timer'} tooltip={'Today'}/>,
     content: <Today/>,
-    pathname: 'today'
   },
   {
     button: <Button icon={'calendar'} tooltip={'Timetable'}/>,
