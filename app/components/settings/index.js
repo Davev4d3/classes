@@ -3,7 +3,7 @@ import s from './style.css';
 import Centered from '../centered';
 import { Toggle } from '../toggle';
 import { SettingsStore, SettingsToggleable } from '../../stores/settings';
-import { PRIMARY_COLOR_NAMES, PRIMARY_COLORS, THEMES, useTheme, useThemeSetState } from '../themes';
+import { PRIMARY_COLORS, THEMES, useTheme, useThemeSetState } from '../themes';
 import { Popup } from '../popover/Popup';
 
 const DarkThemeToggle = props => {
@@ -89,7 +89,12 @@ function AboutPopover(props) {
     <div className={s.aboutPopoverSpacer}>Ram Kaniyur</div>
 
     <div className={s.aboutPopoverMeta} style={accent}>Legal</div>
-    <div><a href='/tos' target='_blank' className={s.aboutLink}>Terms</a></div>
+    <div className={APP_VERSION ? s.aboutPopoverSpacer : null}><a href='/tos' target='_blank' className={s.aboutLink}>Terms</a></div>
+
+    {APP_VERSION ? <>
+      <div className={s.aboutPopoverMeta} style={accent}>Version</div>
+      <div>{APP_VERSION}</div>
+    </>: null}
   </div>
 }
 

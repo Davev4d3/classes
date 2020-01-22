@@ -16,6 +16,7 @@ const plugins = [
     'process.env': {
       'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
     },
+    APP_VERSION: JSON.stringify(require('./package.json').version),
   }),
 
   new ManifestPlugin({

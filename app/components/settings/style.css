@@ -1,3 +1,5 @@
+$color-selector-padding: .5rem;
+
 .row {
   display: flex;
   min-height: 48px;
@@ -120,6 +122,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  margin-left: -$color-selector-padding;
+  margin-right: -$color-selector-padding;
 }
 
 .colorGridItem {
@@ -137,5 +141,5 @@
 
 .colorGridItemContainer {
   display: block;
-  padding: .5rem;
+  padding: $color-selector-padding;
 }
