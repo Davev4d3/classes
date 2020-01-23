@@ -51,6 +51,40 @@ module.exports = (env, argv) => {
     )
   }
 
+  const cssLoader = {
+    loader: 'css-loader',
+    options: {
+      sourceMap: false,
+      modules: true,
+      localIdentName: '[name]__[local]--[hash:base64]'
+    }
+  };
+  const autoprefixer = isProduction ? require('autoprefixer') : null;
+  const postCssLoader = {
+    loader: 'postcss-loader',
+    options: {
+      autoprefixer: {
+        browsers: ['last 2 versions']
+      },
+      plugins: [
+        autoprefixer
+      ].filter(Boolean),
+      sourceMap: false
+    }
+  };
+  const postCssLoaderCssNano = {
+    ...postCssLoader,
+    options: {
+      ...postCssLoader.options,
+      plugins: [
+        autoprefixer,
+        require('cssnano'),
+        require('postcss-inline-svg'),
+        require('precss')
+      ].filter(Boolean)
+    }
+  };
+
   return {
     context: path.join(__dirname, 'app'),
     entry: './index',
@@ -96,32 +130,19 @@ module.exports = (env, argv) => {
           test: /\.css$/,
           use: [
             cssExtractor,
-            {
-              loader: 'css-loader',
-              options: {
-                sourceMap: false,
-                modules: true,
-                localIdentName: '[name]__[local]--[hash:base64]'
-              }
-            },
-            {
-              loader: "postcss-loader",
-              options: {
-                autoprefixer: {
-                  browsers: ["last 2 versions"]
-                },
-                plugins: [
-                  require('autoprefixer'),
-                  require('cssnano'),
-                  require('postcss-inline-svg'),
-                  require('precss')
-                ],
-                sourceMap: false
-              }
-            }
-          ]
+            cssLoader,
+            postCssLoaderCssNano,
+          ].filter(Boolean)
         },
-
+        {
+          test: /\.scss$/,
+          use: [
+            cssExtractor,
+            cssLoader,
+            postCssLoader,
+            {loader: 'sass-loader', options: {sourceMap: !isProduction}},
+          ].filter(Boolean)
+        },
         {
           test: /\.jsx?$/,
           exclude: /node_modules/,

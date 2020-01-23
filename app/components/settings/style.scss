@@ -1,0 +1,7 @@
+@import '~/../app/mixins.scss';
+
+.clearData {
+  @include hoverOutline($color-critical);
+  padding: 0 calc((2.4em + 8px) / 2);
+  letter-spacing: .01rem;
+}

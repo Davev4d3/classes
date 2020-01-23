@@ -1,0 +1,39 @@
+// COLOURS
+$color-carmine: #e74c3c;
+
+// ALIASES
+$color-critical: $color-carmine;
+
+
+@mixin buttonBaseFlex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: normal;
+  letter-spacing: 0.018em;
+  border-radius: 4px;
+
+  padding: 0 8px;
+  min-height: 36px;
+
+  transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+}
+
+@mixin hoverOutline($outline-color, $hover-color: null) {
+  @if (not $hover-color) {
+    $hover-color: rgba($outline-color, .45)
+  }
+  color: $outline-color;
+  border-color: $outline-color;
+  transition: border-color .2s ease-out, color .2s ease-out;
+  &:hover {
+    color: $hover-color;
+    border-color: $hover-color;
+  }
+}
+
+@mixin buttonOutline {
+  @include buttonBaseFlex;
+  border-width: 1px;
+  border-style: solid;
+}

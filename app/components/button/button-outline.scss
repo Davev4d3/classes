@@ -1,0 +1,14 @@
+@import '~/../app/mixins.scss';
+
+.buttonOutline {
+  @include buttonOutline;
+}
+
+.content {
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  outline: none;
+}

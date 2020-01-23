@@ -1,9 +1,11 @@
 import React from 'react';
+import { ButtonOutline } from "../button/button-outline";
 import s from './style.css';
+import ss from './style.scss';
 import Centered from '../centered';
 import { Toggle } from '../toggle';
 import { SettingsStore, SettingsToggleable } from '../../stores/settings';
-import { PRIMARY_COLORS, THEMES, useTheme, useThemeSetState } from '../themes';
+import { PRIMARY_COLORS, ThemeContext, THEMES, useTheme, useThemeSetState } from '../themes';
 import { Popup } from '../popover/Popup';
 
 const DarkThemeToggle = props => {
@@ -89,12 +91,13 @@ function AboutPopover(props) {
     <div className={s.aboutPopoverSpacer}>Ram Kaniyur</div>
 
     <div className={s.aboutPopoverMeta} style={accent}>Legal</div>
-    <div className={APP_VERSION ? s.aboutPopoverSpacer : null}><a href='/tos' target='_blank' className={s.aboutLink}>Terms</a></div>
+    <div className={APP_VERSION ? s.aboutPopoverSpacer : null}><a href='/tos' target='_blank'
+                                                                  className={s.aboutLink}>Terms</a></div>
 
     {APP_VERSION ? <>
       <div className={s.aboutPopoverMeta} style={accent}>Version</div>
       <div>{APP_VERSION}</div>
-    </>: null}
+    </> : null}
   </div>
 }
 
@@ -120,6 +123,8 @@ export class Settings extends React.Component {
       loadNextDay: SettingsStore.loadNextDay
     });
   };
+
+  static contextType = ThemeContext;
 
   static clearData() {
     window['localStorage']['clear']();
@@ -176,7 +181,7 @@ export class Settings extends React.Component {
               <select
                 onChange={e => SettingsStore.update({noticesFilter: e.target.value || null})}
                 value={this.state.noticesFilter}
-                className={s.select}>
+                className={(this.context && this.context.theme) ? (this.context.theme === THEMES.DARK ? s.select + ' ' + s.select__dark : s.select) : s.select}>
                 <option value=''>All Years</option>
                 <option value='7'>Year 7</option>
                 <option value='8'>Year 8</option>
@@ -192,7 +197,7 @@ export class Settings extends React.Component {
           <div className={s.row}>
             <div className={s.inner__left}>Content Settings</div>
             <div className={s.inner__right}>
-              <button onClick={this.constructor.clearData}>Clear All Data</button>
+              <ButtonOutline onClick={this.constructor.clearData} className={ss.clearData}>Clear Data</ButtonOutline>
             </div>
           </div>
         </div>

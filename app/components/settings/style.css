@@ -41,13 +41,19 @@ $color-selector-padding: .5rem;
   border-radius: 4px;
   outline: none;
   width: auto;
-  background: #fafafa svg-load(arrow.svg) no-repeat right 8px center / 10px;
+  background: transparent svg-load(arrow.svg, fill: #222) no-repeat right 8px center / 10px;
   font: inherit;
   cursor: pointer;
+  color: inherit;
+}
+
+.select__dark {
+  background: transparent svg-load(arrow.svg, fill: #fafafa) no-repeat right 8px center / 10px;
 }
 
 .select > option {
   font-size: 1rem;
+  background: var(--background-color);
 }
 
 .aboutIcon {
@@ -62,7 +68,7 @@ $color-selector-padding: .5rem;
 
   &:hover {
     opacity: .7;
-   }
+  }
 }
 
 .aboutIcon:after {
@@ -98,6 +104,7 @@ $color-selector-padding: .5rem;
 .aboutLink {
   color: inherit;
   transition: color .2s ease-out;
+
   &:hover {
     color: #8b8b8b;
   }
@@ -114,7 +121,7 @@ $color-selector-padding: .5rem;
   transition: opacity .2s ease-out;
 
   &:hover {
-     opacity: .7;
+    opacity: .7;
   }
 }
 
@@ -135,7 +142,7 @@ $color-selector-padding: .5rem;
   margin-bottom: .2rem;
 
   &:hover {
-   opacity: .7;
+    opacity: .7;
   }
 }
 

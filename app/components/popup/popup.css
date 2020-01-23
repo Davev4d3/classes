@@ -24,6 +24,7 @@
     transition: transform 0.5s cubic-bezier(0.755, 0.05, 0.855, 0.06);
     transform: none;
     user-select:none;
+    z-index: 12;
 
     @media screen and (max-width: 640px) {
         line-height: 1.45;

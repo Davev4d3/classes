@@ -45,7 +45,12 @@ export class Tabs extends React.Component {
 
     return (
       <div className={STYLE.container}
-           style={hasTheme ? {backgroundColor, color: fontColor, '--primary-color': primaryColor} : null}>
+           style={hasTheme ? {
+             backgroundColor,
+             color: fontColor,
+             '--primary-color': primaryColor,
+             '--background-color': backgroundColor,
+           } : null}>
         <ul className={STYLE.nav} style={{position: 'fixed'}}>{buttons}</ul>
         <ul className={STYLE.nav}/>
 
