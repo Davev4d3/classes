@@ -148,7 +148,7 @@ export class ThemeProvider extends React.Component {
   };
 
   onDarkModeChange = ({matches}) => {
-    this.setThemeState(matches ? THEMES.DARK : THEMES.LIGHT)
+    this.setThemeState({theme: matches ? THEMES.DARK : THEMES.LIGHT})
   };
 
   componentDidMount() {
