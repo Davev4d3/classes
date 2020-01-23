@@ -5,6 +5,7 @@ const GA_TRACKING_ID = 'UA-130596833-2';
 export function initialiseAnalytics() {
   console.log('analytics initialising');
   ReactGA.initialize(GA_TRACKING_ID);
+  setDimension('dimension2', APP_VERSION);
 }
 
 export function pageView(pathname) {
