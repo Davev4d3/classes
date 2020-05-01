@@ -1,5 +1,5 @@
 # Classes
-A blazing flast, modern, tested and trusted, timetable app for Sydney High School. [lordhelix.tk](https://lordhelix.tk/)
+A blazing fast, modern, tested and trusted, timetable app for Sydney High School. [lordhelix.tk](https://lordhelix.tk/)
 
 ### Functionality
 Provides detailed information in a convenient manner to help students go about their day. Includes teachers, casuals, shared classes, room variations and assessments in the daily overview. Also includes the full timetable, upcoming exams, daily notices and settings for personalisation and flexibility.
