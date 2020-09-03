@@ -42,8 +42,9 @@ CLIENT_SECRET=
 REDIRECT_URI=
 ```
 
-Set up Postgres with the `connect-pg-simple` [schema](https://github.com/voxpelli/node-connect-pg-simple/blob/fc163b26511d746452ef42c798ab766caca2a5ac/table.sql) to enable user sessions.
+Set up Postgres with the [connect-pg-simple schema](https://github.com/voxpelli/node-connect-pg-simple/blob/fc163b26511d746452ef42c798ab766caca2a5ac/table.sql) to enable user sessions.
 Notices and patch notes schemas are set up with `knex.js` migrations. Use `npx knex migrate` to create the tables.
+Finally, use `npm start` to fire up the backend.
 
 ## License
 Based on the original lordhelix app (MIT License), &copy; 2016 Ram Kaniyur. All Rights Reserved.
