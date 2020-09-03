@@ -1,4 +1,4 @@
-# Classes
+# Classes [![Build Status](https://travis-ci.com/hellodavie/shs_classes.svg?branch=master)](https://travis-ci.com/hellodavie/shs_classes)
 A blazing fast, modern, tested, and trusted timetable app for Sydney Boys High School. 
 Previously known as [lordhelix.tk](https://lordhelix.tk/).
 
@@ -51,4 +51,5 @@ Finally, use `npm start` to fire up the backend.
 Based on the original lordhelix app (MIT License), &copy; 2016 Ram Kaniyur. All Rights Reserved.
 Maintained by Eddie Qi over the period of 2017-18.
 
-New classes app and modifications are under the MIT License. &copy; 2020 David Wu. All Rights Reserved.
+New classes app and modifications are under the MIT License. &copy; 2020 David Wu. All Rights Reserved. \
+See LICENSE for further information and licensing for images in this readme.
