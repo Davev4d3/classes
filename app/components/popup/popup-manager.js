@@ -14,7 +14,6 @@ export class PopupManager extends React.Component {
   }
 
   onPopupClosed = (type) => {
-    console.log('closed', type, this._allPopups);
     return this.storePopups(type);
   };
 

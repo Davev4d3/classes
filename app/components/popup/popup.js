@@ -105,7 +105,6 @@ export class Popup extends React.Component {
   setCloseAfterTimeout() {
     if (this.props.closeAfter) this._closeAfterTimeout = setTimeout(() => {
       this.close();
-      console.log('closing popup')
     }, this.props.closeAfter);
   }
 
