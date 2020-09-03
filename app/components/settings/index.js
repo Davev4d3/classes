@@ -1,7 +1,7 @@
 import React from 'react';
 import { ButtonOutline } from "../button/button-outline";
 import s from './style.css';
-import ss from './style.scss';
+import styleParent from './style.scss';
 import Centered from '../centered';
 import { Toggle } from '../toggle';
 import { SettingsStore, SettingsToggleable } from '../../stores/settings';
@@ -17,7 +17,7 @@ const DarkThemeToggle = props => {
       <div className={s.inner__left}>Dark Theme</div>
       <div className={s.inner__right}>
         <Toggle checked={themeState.theme === THEMES.DARK}
-                onChange={(newState) => themeSetState({theme: newState ? THEMES.DARK : THEMES.LIGHT})}/>
+          onChange={(newState) => themeSetState({ theme: newState ? THEMES.DARK : THEMES.LIGHT })} />
       </div>
     </div>
   )
@@ -27,21 +27,20 @@ function ColorPicker(props) {
   const themeState = useTheme();
   const themeSetState = useThemeSetState();
 
-  const accent = {color: themeState.details && themeState.details.accent || null};
+  const accent = { color: themeState.details && themeState.details.accent || null };
 
-  return <div className={s.aboutPopover} style={{background: themeState.theme === THEMES.DARK ? '#4d4d4d' : '#ececec'}}>
+  return <div className={s.aboutPopover} style={{ background: themeState.theme === THEMES.DARK ? '#4d4d4d' : '#ececec' }}>
     <div className={s.aboutPopoverMeta} style={accent}>Primary Colours</div>
-    <div className={s.aboutPopoverSpacer}/>
+    <div className={s.aboutPopoverSpacer} />
 
     <div className={s.colorGrid}>
       {Object.keys(PRIMARY_COLORS).map((v, i) => {
         const color = PRIMARY_COLORS[v];
         return (
           <a className={s.colorGridItemContainer} key={i} onClick={() => {
-            console.log(v)
-            themeSetState({primaryColor: v});
+            themeSetState({ primaryColor: v });
           }}>
-            <div className={s.colorGridItem} style={{background: color}}/>
+            <div className={s.colorGridItem} style={{ background: color }} />
           </a>
         )
       })}
@@ -61,7 +60,7 @@ function PrimaryColorSetting(props) {
   };
 
   const toggleColorPicker = <a>
-    <div className={s.colorCircle} style={buttonStyle}/>
+    <div className={s.colorCircle} style={buttonStyle} />
   </a>;
 
   return (
@@ -70,7 +69,7 @@ function PrimaryColorSetting(props) {
       <div className={s.inner__right}>
         <Popup trigger={toggleColorPicker}>
           {(isOpen, requestClose) => {
-            return <ColorPicker/>
+            return <ColorPicker />
           }}
         </Popup>
       </div>
@@ -80,9 +79,9 @@ function PrimaryColorSetting(props) {
 
 function AboutPopover(props) {
   const themeState = useTheme();
-  const accent = {color: themeState.details.accent};
+  const accent = { color: themeState.details.accent };
 
-  return <div className={s.aboutPopover} style={{background: themeState.theme === THEMES.DARK ? '#4d4d4d' : '#ececec'}}>
+  return <div className={s.aboutPopover} style={{ background: themeState.theme === THEMES.DARK ? '#4d4d4d' : '#ececec' }}>
     <div className={s.aboutPopoverMeta} style={accent}>Made by</div>
     <div className={s.aboutPopoverSpacer}>
       <a href='http://hellodavie.com/' target='_blank' className={s.aboutLink}>Dawei Wu</a>
@@ -90,9 +89,15 @@ function AboutPopover(props) {
     <div className={s.aboutPopoverMeta} style={accent}>Originally created by</div>
     <div className={s.aboutPopoverSpacer}>Ram Kaniyur</div>
 
+    <div className={s.aboutPopoverMeta} style={accent}>Source Code</div>
+    <div className={s.aboutPopoverSpacer}>
+      <a href='https://github.com/hellodavie/shs_classes' target='_blank' className={s.aboutLink}>GitHub</a>
+    </div>
+
     <div className={s.aboutPopoverMeta} style={accent}>Legal</div>
-    <div className={APP_VERSION ? s.aboutPopoverSpacer : null}><a href='/tos' target='_blank'
-                                                                  className={s.aboutLink}>Terms</a></div>
+    <div className={APP_VERSION ? s.aboutPopoverSpacer : null}>
+      <a href='/tos' target='_blank' className={s.aboutLink}>Terms</a>
+    </div>
 
     {APP_VERSION ? <>
       <div className={s.aboutPopoverMeta} style={accent}>Version</div>
@@ -146,14 +151,14 @@ export class Settings extends React.Component {
         <div className={s.inner__right}>
           <Toggle
             checked={this.state[v.id]}
-            onChange={(newState) => SettingsStore.update({[v.id]: newState})}
+            onChange={(newState) => SettingsStore.update({ [v.id]: newState })}
           />
         </div>
       </div>
     ));
 
     const toggleAbout = <a>
-      <div className={s.aboutIcon}/>
+      <div className={s.aboutIcon} />
     </a>;
 
     return <Centered vertical horizontal>
@@ -164,14 +169,14 @@ export class Settings extends React.Component {
             <div className={s.inner__right}>
               <Popup trigger={toggleAbout}>
                 {(isOpen, requestClose) => {
-                  return <AboutPopover/>
+                  return <AboutPopover />
                 }}
               </Popup>
             </div>
           </div>
 
-          <DarkThemeToggle/>
-          <PrimaryColorSetting/>
+          <DarkThemeToggle />
+          <PrimaryColorSetting />
 
           {toggleSettings}
 
@@ -179,7 +184,7 @@ export class Settings extends React.Component {
             <div className={s.inner__left}>Notices Filter</div>
             <div className={s.inner__right}>
               <select
-                onChange={e => SettingsStore.update({noticesFilter: e.target.value || null})}
+                onChange={e => SettingsStore.update({ noticesFilter: e.target.value || null })}
                 value={this.state.noticesFilter}
                 className={(this.context && this.context.theme) ? (this.context.theme === THEMES.DARK ? s.select + ' ' + s.select__dark : s.select) : s.select}>
                 <option value=''>All Years</option>
@@ -197,7 +202,7 @@ export class Settings extends React.Component {
           <div className={s.row}>
             <div className={s.inner__left}>Content Settings</div>
             <div className={s.inner__right}>
-              <ButtonOutline onClick={this.constructor.clearData} className={ss.clearData}>Clear Data</ButtonOutline>
+              <ButtonOutline onClick={this.constructor.clearData} className={styleParent.clearData}>Clear Data</ButtonOutline>
             </div>
           </div>
         </div>

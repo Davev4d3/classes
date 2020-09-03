@@ -46,5 +46,5 @@ require('./auth')(
 require('./api')(app);
 
 app.listen(PORT, IP, function () {
-  console.log('Server up on ' + IP + ':' + PORT + '!');
+  console.log(`Server up on ${IP}:${PORT}`);
 });

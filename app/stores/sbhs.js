@@ -29,7 +29,6 @@ class SBHSStore extends Emitter {
       const h = location.hash.substr(1);
       if (h.length === 10 && h.charAt(4) === '-' && h.charAt(7) === '-') {
         this._date = '&date=' + h;
-        console.log('DATE OVERRIDE: ' + h);
       }
     }
 

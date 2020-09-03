@@ -10,8 +10,6 @@ export function TimerPolling(func, date) {
     date: date
   });
 
-  console.log('tpolling', date);
-
   if (!timerChecker) timerChecker = window.setTimeout(function () {
     const temp = timers;
     timers = [];
@@ -27,7 +25,6 @@ export function TimerDynamic(cb, date, minInterval, usePolling = true) {
   if (!date) return;
   const timeDiff = date - Date.now();
   let interval;
-  console.log('t init', date, minInterval, usePolling);
 
   if (timeDiff > 0) {
     if (timeDiff > TIMER_MAX_TIMEOUT) {
@@ -46,7 +43,6 @@ export function TimerDynamic(cb, date, minInterval, usePolling = true) {
     interval = minInterval;
   }
 
-  console.log('t timeout', date, interval);
   return setTimeout(cb, interval);
 }
 
