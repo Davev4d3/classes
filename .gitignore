@@ -1,4 +1,5 @@
 ### suredavid ###
+*.psd
 
 ## Development
 /public/app.js.map

@@ -1,6 +1,6 @@
 {
-  "name": "classes",
-  "version": "2.37.3",
+  "name": "shs_classes",
+  "version": "2.37.4",
   "description": "A modern timetable app for students at Sydney High.",
   "repository": {
     "url": "https://github.com/hellodavie/shs_classes.git",
@@ -14,7 +14,7 @@
   "private": true,
   "author": {
     "name": "Dawei Wu",
-    "url": "hellodavie.com"
+    "url": "https://hellodavie.com"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
