@@ -20,7 +20,8 @@ Previously known as [lordhelix.tk](https://lordhelix.tk/).
  - Cross platform, automatic updates
 
 ## Functionality
-A customizable dashboard for your classes, Classes provides detailed information in a convenient manner to help students go about their day.
+A customizable dashboard for your classes;
+Classes provides detailed information in a convenient manner to help students go about their day.
 Displays teachers, casuals/subtitute teachers, shared classes, room variations, and assessments in the daily overview.
 Also includes your full timetable, upcoming exams, daily notices, and settings for personalisation and flexibility.
 No internet? No worries! Built as a progressive web app, offline support is automatically enabled by caching your timetable.
