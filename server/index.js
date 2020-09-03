@@ -15,7 +15,7 @@ app.use(session({
   store: process.env.NODE_ENV === 'production' ? new pgSession({
     conString: process.env.DATABASE_URL
   }) : null,
-  secret: process.env.COOKIE_SECRET || 'secret',
+  secret: process.env.COOKIE_SECRET,
   saveUninitialized: false,
   resave: false,
   cookie: {maxAge: 90 * 24 * 60 * 60 * 1000} // 90 Days
