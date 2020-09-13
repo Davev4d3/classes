@@ -1,6 +1,7 @@
 const express = require('express');
 const session = require('express-session');
 const compression = require('compression');
+const helmet = require('helmet');
 const path = require('path');
 const pgSession = require('connect-pg-simple')(session);
 
@@ -11,6 +12,32 @@ const app = express();
 
 app.use(compression());
 
+app.use(
+  helmet({
+    ieNoOpen: false,
+    permittedCrossDomainPolicies: false,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        baseUri: ["'self'"],
+        fontSrc: ["'self'", "https:", "data:"],
+        frameAncestors: ["'self'"],
+        imgSrc: ["'self'", "data:", "www.google-analytics.com", "hellodavie.com"],
+        objectSrc: ["'none'"],
+        styleSrc: ["'self'", "https:", "'unsafe-inline'"],
+        scriptSrc: ["'self'", "www.google-analytics.com"],
+        manifestSrc: ["'self'"],
+        workerSrc: ["'self'"],
+        connectSrc: ["'self'", "https://*.sbhs.net.au", "www.google-analytics.com", "stats.g.doubleclick.net"],
+        upgradeInsecureRequests: [],
+      }
+    },
+    hsts: {
+      includeSubDomains: false
+    }
+  })
+);
+
 app.use(session({
   store: process.env.NODE_ENV === 'production' ? new pgSession({
     conString: process.env.DATABASE_URL
@@ -18,7 +45,7 @@ app.use(session({
   secret: process.env.COOKIE_SECRET,
   saveUninitialized: false,
   resave: false,
-  cookie: {maxAge: 90 * 24 * 60 * 60 * 1000} // 90 Days
+  cookie: { maxAge: 90 * 24 * 60 * 60 * 1000 } // 90 Days
 }));
 
 // Redirect all www requests to non-www
