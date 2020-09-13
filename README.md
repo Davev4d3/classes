@@ -1,4 +1,11 @@
-# Classes [![Build Status](https://travis-ci.com/hellodavie/shs_classes.svg?branch=master)](https://travis-ci.com/hellodavie/shs_classes)
+# Classes
+[![Build Status](https://travis-ci.com/hellodavie/shs_classes.svg?branch=master)](https://travis-ci.com/hellodavie/shs_classes)
+![License](https://img.shields.io/badge/license-MIT-green)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/hellodavie/shs_classes)
+[![Server Status](https://img.shields.io/website?label=status&url=https%3A%2F%2Fshsclasses.hellodavie.com)](https://shsclasses.hellodavie.com/)
+![Mozilla HTTP Observatory Grade](https://img.shields.io/mozilla-observatory/grade/shsclasses.hellodavie.com?publish)
+
+
 A blazing fast, modern, tested, and trusted timetable app for Sydney Boys High School. 
 Previously known as [lordhelix.tk](https://lordhelix.tk/).
 

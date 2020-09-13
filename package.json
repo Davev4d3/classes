@@ -51,6 +51,7 @@
     "connect-pg-simple": "^6.2.1",
     "express": "^4.13.3",
     "express-session": "^1.11.3",
+    "helmet": "^4.1.1",
     "knex": "^0.19.3",
     "pg": "^7.12.1",
     "simple-oauth2": "^0.2.1"
