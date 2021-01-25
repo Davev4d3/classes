@@ -61,8 +61,8 @@ app.use(wwwRedirect);
 
 // Redirect hellodavie subdomain to current app domain
 app.use((req, res, next) => {
-  if (req.headers.host === 'shsclasses.hellodavie.com') {
-    return res.redirect(301, req.protocol + '://classti.ml' + req.originalUrl);
+  if (req.headers.host === 'shsclasses.hellodavie.com' && !req.originalUrl.startsWith('/api')) {
+    return res.redirect(301, 'https://classti.ml' + req.originalUrl);
   }
   next();
 });
