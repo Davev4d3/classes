@@ -45,5 +45,3 @@ export function TimerDynamic(cb, date, minInterval, usePolling = true) {
 
   return setTimeout(cb, interval);
 }
-
-console.log("%cManaged by David - @hellodavie", "background: #282a30; color: #ffb86e; line-height: 24px; padding: 8px 16px;")
