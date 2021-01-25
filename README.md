@@ -7,7 +7,7 @@
 
 
 A blazing fast, modern, tested, and trusted timetable app for Sydney Boys High School. 
-Previously known as [lordhelix.tk](https://lordhelix.tk/).
+Previously known as [lordhelix.tk](https://shsclasses.hellodavie.com/).
 
 <div align="center">
 <br>
