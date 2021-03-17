@@ -112,4 +112,17 @@ module.exports = function (app, clientID, clientSecret, host) {
       res.status(403).json({ error: 'unauthenticated' });
     }
   });
+
+  if (process.env.NODE_ENV !== 'production') {
+    app.get('/api/session/get', function (req, res) {
+      res.json(req.session.testValue);
+    });
+
+    app.get('/api/session/set', function (req, res) {
+      req.session.testValue = {
+        key: 'value',
+      };
+      res.json({ error: null });
+    });
+  }
 };

@@ -38,9 +38,11 @@ app.use(
   })
 );
 
+const { pool: pgPool } = require('./pg-pool');
+
 app.use(session({
-  store: process.env.NODE_ENV === 'production' ? new pgSession({
-    conString: process.env.DATABASE_URL
+  store: pgPool ? new pgSession({
+    pool: pgPool
   }) : null,
   secret: process.env.COOKIE_SECRET,
   saveUninitialized: false,
