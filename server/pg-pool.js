@@ -6,7 +6,7 @@ const settings = {
 };
 
 const pool = process.env.NODE_ENV === 'production' ? (
-  pool = new (require('pg')).Pool({
+  new (require('pg')).Pool({
     ...settings
   })
 ) : null;

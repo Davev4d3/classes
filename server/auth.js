@@ -113,7 +113,7 @@ module.exports = function (app, clientID, clientSecret, host) {
     }
   });
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (1||process.env.NODE_ENV !== 'production') {
     app.get('/api/session/get', function (req, res) {
       res.json(req.session.testValue);
     });
